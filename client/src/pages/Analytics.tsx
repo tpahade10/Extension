@@ -28,12 +28,34 @@ const applicationRecords = [
   { jobTitle: 'Job Application for Security Engineer at Figma', company: 'https://www.figma.com/careers/', status: 'Applied', date: 'January 14, 2025' },
   { jobTitle: 'IT Data Engineer Intern (USA), Remote | Pinterest Careers', company: 'https://www.pinterestcareers.com', status: 'Applied', date: 'January 13, 2025' },
   { jobTitle: 'Undergrad Software Engineering Intern [Dec 2025/Sept...', company: 'http://www.twitch.tv/jobs', status: 'Rejected', date: 'January 13, 2025' },
+  { jobTitle: 'Frontend Engineer Intern at Google', company: 'https://www.google.com/careers/', status: 'Screen', date: 'January 12, 2025' },
+  { jobTitle: 'Backend Engineer at Microsoft', company: 'https://careers.microsoft.com/', status: 'Interviewing', date: 'January 11, 2025' },
+  { jobTitle: 'Product Manager Intern at Amazon', company: 'https://www.amazon.jobs/', status: 'Interviewing', date: 'January 10, 2025' },
+  { jobTitle: 'Data Scientist at Meta', company: 'https://www.metacareers.com/', status: 'Offer', date: 'January 9, 2025' },
+  { jobTitle: 'Full Stack Developer at Netflix', company: 'https://jobs.netflix.com/', status: 'Rejected', date: 'January 8, 2025' },
+  { jobTitle: 'DevOps Engineer at Apple', company: 'https://www.apple.com/careers/', status: 'Applied', date: 'January 7, 2025' },
+  { jobTitle: 'Machine Learning Engineer at OpenAI', company: 'https://openai.com/careers/', status: 'Screen', date: 'January 6, 2025' },
 ];
 
 const statuses = ['All', 'Applied', 'Rejected', 'Interviewing', 'Offer', 'Screen'];
 
 export default function Analytics() {
   const [selectedStatus, setSelectedStatus] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredRecords = applicationRecords.filter(record => {
+    const statusMatch = selectedStatus === 'All' || record.status === selectedStatus;
+    const searchMatch = record.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        record.company.toLowerCase().includes(searchQuery.toLowerCase());
+    return statusMatch && searchMatch;
+  });
+
+  const getStatusCount = (status: string) => {
+    if (status === 'All') {
+      return applicationRecords.length;
+    }
+    return applicationRecords.filter(r => r.status === status).length;
+  };
 
   return (
     <Layout>
