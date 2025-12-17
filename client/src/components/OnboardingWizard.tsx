@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronRight, ChevronLeft, Upload } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronRight, ChevronLeft, Upload } from "lucide-react";
 
 interface FormData {
   // Step 1: Personal Profile
@@ -71,55 +71,79 @@ interface OnboardingWizardProps {
 const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
-    preferredName: '',
-    addressLine1: '',
-    addressLine2: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-    email: '',
-    phoneCountryCode: '+1',
-    phoneNumber: '',
-    phoneDeviceType: '',
-    workExperience: [{ jobTitle: '', companyName: '', location: '', startDate: '', endDate: '', currentlyWorking: false, jobDescription: '' }],
-    education: [{ school: '', degree: '', fieldOfStudy: '', startDate: '', endDate: '', currentlyAttending: false, gpa: '' }],
-    languages: [{ language: '', proficiency: 'Basic', fluent: false }],
+    firstName: "",
+    lastName: "",
+    preferredName: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+    email: "",
+    phoneCountryCode: "+1",
+    phoneNumber: "",
+    phoneDeviceType: "",
+    workExperience: [
+      {
+        jobTitle: "",
+        companyName: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        currentlyWorking: false,
+        jobDescription: "",
+      },
+    ],
+    education: [
+      {
+        school: "",
+        degree: "",
+        fieldOfStudy: "",
+        startDate: "",
+        endDate: "",
+        currentlyAttending: false,
+        gpa: "",
+      },
+    ],
+    languages: [{ language: "", proficiency: "Basic", fluent: false }],
     resumeFile: null,
-    resumeBase64: '',
+    resumeBase64: "",
     skills: [],
-    githubUrl: '',
-    linkedinUrl: '',
-    portfolioUrl: '',
-    workAuthorization: '',
+    githubUrl: "",
+    linkedinUrl: "",
+    portfolioUrl: "",
+    workAuthorization: "",
     sponsorshipRequired: false,
-    disabilityStatus: '',
-    veteranStatus: '',
-    age: '',
-    gender: '',
-    ethnicity: '',
+    disabilityStatus: "",
+    veteranStatus: "",
+    age: "",
+    gender: "",
+    ethnicity: "",
   });
 
-  const [newSkill, setNewSkill] = useState('');
+  const [newSkill, setNewSkill] = useState("");
 
   const steps = [
-    { title: 'PERSONAL PROFILE', number: 1 },
-    { title: 'CONTACT INFORMATION', number: 2 },
-    { title: 'WORK EXPERIENCE', number: 3 },
-    { title: 'EDUCATION & LANGUAGES', number: 4 },
-    { title: 'RESUME & SKILLS', number: 5 },
-    { title: 'WEBSITES & ELIGIBILITY', number: 6 },
+    { title: "PERSONAL PROFILE", number: 1 },
+    { title: "CONTACT INFORMATION", number: 2 },
+    { title: "WORK EXPERIENCE", number: 3 },
+    { title: "EDUCATION & LANGUAGES", number: 4 },
+    { title: "RESUME & SKILLS", number: 5 },
+    { title: "WEBSITES & ELIGIBILITY", number: 6 },
   ];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -133,7 +157,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       // Convert to Base64
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = event => {
         const base64String = event.target?.result as string;
         setFormData(prev => ({
           ...prev,
@@ -150,7 +174,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         ...prev,
         skills: [...prev.skills, newSkill],
       }));
-      setNewSkill('');
+      setNewSkill("");
     }
   };
 
@@ -176,10 +200,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   };
 
   const handleSubmit = () => {
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // Save to localStorage or send to background script
-    localStorage.setItem('onboardingData', JSON.stringify(formData));
-    alert('Profile setup complete! Your data has been saved.');
+    localStorage.setItem("onboardingData", JSON.stringify(formData));
+    alert("Profile setup complete! Your data has been saved.");
 
     // Notify parent component that onboarding is complete
     if (onComplete) {
@@ -197,7 +221,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             <div className="text-sm font-mono font-bold text-[#1a1a1a] tracking-widest">
               STEP {currentStep + 1} OF {steps.length}
             </div>
-            <div className="flex-1 h-1 bg-[#1a1a1a]" style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}></div>
+            <div
+              className="flex-1 h-1 bg-[#1a1a1a]"
+              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+            ></div>
           </div>
           <h1 className="text-4xl font-mono font-bold text-[#1a1a1a] tracking-wide mb-2">
             {steps[currentStep].title}
@@ -209,12 +236,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         {currentStep === 0 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Tell us about yourself. Please enter your full name and preferred name (if any), plus your current address. This helps us personalize your experience and prefill personal info on forms.
+              Tell us about yourself. Please enter your full name and preferred
+              name (if any), plus your current address. This helps us
+              personalize your experience and prefill personal info on forms.
             </p>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">FIRST NAME</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  FIRST NAME
+                </label>
                 <input
                   type="text"
                   name="firstName"
@@ -225,7 +256,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">LAST NAME</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  LAST NAME
+                </label>
                 <input
                   type="text"
                   name="lastName"
@@ -238,7 +271,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">PREFERRED NAME (OPTIONAL)</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                PREFERRED NAME (OPTIONAL)
+              </label>
               <input
                 type="text"
                 name="preferredName"
@@ -250,7 +285,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">ADDRESS LINE 1</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                ADDRESS LINE 1
+              </label>
               <input
                 type="text"
                 name="addressLine1"
@@ -262,7 +299,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">ADDRESS LINE 2 (OPTIONAL)</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                ADDRESS LINE 2 (OPTIONAL)
+              </label>
               <input
                 type="text"
                 name="addressLine2"
@@ -275,7 +314,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
             <div className="grid grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">CITY</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  CITY
+                </label>
                 <input
                   type="text"
                   name="city"
@@ -286,7 +327,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">STATE/REGION</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  STATE/REGION
+                </label>
                 <input
                   type="text"
                   name="state"
@@ -297,7 +340,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">POSTAL CODE</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  POSTAL CODE
+                </label>
                 <input
                   type="text"
                   name="postalCode"
@@ -310,7 +355,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">COUNTRY</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                COUNTRY
+              </label>
               <input
                 type="text"
                 name="country"
@@ -327,11 +374,15 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         {currentStep === 1 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              How can people reach you? Share your primary email address and phone number (including country code). This will be used to contact you for confirmations, alerts, and important updates.
+              How can people reach you? Share your primary email address and
+              phone number (including country code). This will be used to
+              contact you for confirmations, alerts, and important updates.
             </p>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">EMAIL ADDRESS</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                EMAIL ADDRESS
+              </label>
               <input
                 type="email"
                 name="email"
@@ -344,7 +395,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">COUNTRY CODE</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  COUNTRY CODE
+                </label>
                 <input
                   type="text"
                   name="phoneCountryCode"
@@ -355,7 +408,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">PHONE NUMBER</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  PHONE NUMBER
+                </label>
                 <input
                   type="tel"
                   name="phoneNumber"
@@ -368,7 +423,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">DEVICE TYPE (OPTIONAL)</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                DEVICE TYPE (OPTIONAL)
+              </label>
               <select
                 name="phoneDeviceType"
                 value={formData.phoneDeviceType}
@@ -388,35 +445,50 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         {currentStep === 2 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Work history matters! Add your current and past jobs so we can customize job applications and professional recommendations. You can add multiple roles if needed.
+              Work history matters! Add your current and past jobs so we can
+              customize job applications and professional recommendations. You
+              can add multiple roles if needed.
             </p>
 
             {formData.workExperience.map((job, index) => (
-              <div key={index} className="border-3 border-[#1a1a1a] p-6 space-y-4">
+              <div
+                key={index}
+                className="border-3 border-[#1a1a1a] p-6 space-y-4"
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">JOB TITLE</label>
+                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                      JOB TITLE
+                    </label>
                     <input
                       type="text"
                       value={job.jobTitle}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newExp = [...formData.workExperience];
                         newExp[index].jobTitle = e.target.value;
-                        setFormData(prev => ({ ...prev, workExperience: newExp }));
+                        setFormData(prev => ({
+                          ...prev,
+                          workExperience: newExp,
+                        }));
                       }}
                       className="w-full"
                       placeholder="Software Engineer"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">COMPANY NAME</label>
+                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                      COMPANY NAME
+                    </label>
                     <input
                       type="text"
                       value={job.companyName}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newExp = [...formData.workExperience];
                         newExp[index].companyName = e.target.value;
-                        setFormData(prev => ({ ...prev, workExperience: newExp }));
+                        setFormData(prev => ({
+                          ...prev,
+                          workExperience: newExp,
+                        }));
                       }}
                       className="w-full"
                       placeholder="Tech Corp"
@@ -425,14 +497,19 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">LOCATION</label>
+                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                    LOCATION
+                  </label>
                   <input
                     type="text"
                     value={job.location}
-                    onChange={(e) => {
+                    onChange={e => {
                       const newExp = [...formData.workExperience];
                       newExp[index].location = e.target.value;
-                      setFormData(prev => ({ ...prev, workExperience: newExp }));
+                      setFormData(prev => ({
+                        ...prev,
+                        workExperience: newExp,
+                      }));
                     }}
                     className="w-full"
                     placeholder="San Francisco, CA"
@@ -441,27 +518,37 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">START DATE</label>
+                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                      START DATE
+                    </label>
                     <input
                       type="date"
                       value={job.startDate}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newExp = [...formData.workExperience];
                         newExp[index].startDate = e.target.value;
-                        setFormData(prev => ({ ...prev, workExperience: newExp }));
+                        setFormData(prev => ({
+                          ...prev,
+                          workExperience: newExp,
+                        }));
                       }}
                       className="w-full"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">END DATE</label>
+                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                      END DATE
+                    </label>
                     <input
                       type="date"
                       value={job.endDate}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newExp = [...formData.workExperience];
                         newExp[index].endDate = e.target.value;
-                        setFormData(prev => ({ ...prev, workExperience: newExp }));
+                        setFormData(prev => ({
+                          ...prev,
+                          workExperience: newExp,
+                        }));
                       }}
                       className="w-full"
                       disabled={job.currentlyWorking}
@@ -473,24 +560,34 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   <input
                     type="checkbox"
                     checked={job.currentlyWorking}
-                    onChange={(e) => {
+                    onChange={e => {
                       const newExp = [...formData.workExperience];
                       newExp[index].currentlyWorking = e.target.checked;
-                      setFormData(prev => ({ ...prev, workExperience: newExp }));
+                      setFormData(prev => ({
+                        ...prev,
+                        workExperience: newExp,
+                      }));
                     }}
                     className="w-5 h-5"
                   />
-                  <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">CURRENTLY WORKING HERE</span>
+                  <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
+                    CURRENTLY WORKING HERE
+                  </span>
                 </label>
 
                 <div>
-                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">JOB DESCRIPTION</label>
+                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                    JOB DESCRIPTION
+                  </label>
                   <textarea
                     value={job.jobDescription}
-                    onChange={(e) => {
+                    onChange={e => {
                       const newExp = [...formData.workExperience];
                       newExp[index].jobDescription = e.target.value;
-                      setFormData(prev => ({ ...prev, workExperience: newExp }));
+                      setFormData(prev => ({
+                        ...prev,
+                        workExperience: newExp,
+                      }));
                     }}
                     className="w-full h-24"
                     placeholder="Describe your responsibilities, achievements, and tools used..."
@@ -505,20 +602,28 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         {currentStep === 3 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Let's capture your education and languages. This helps tailor suggestions and recommendations in your field.
+              Let's capture your education and languages. This helps tailor
+              suggestions and recommendations in your field.
             </p>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-mono font-bold text-[#1a1a1a] tracking-wide">EDUCATION</h3>
+              <h3 className="text-lg font-mono font-bold text-[#1a1a1a] tracking-wide">
+                EDUCATION
+              </h3>
               {formData.education.map((edu, index) => (
-                <div key={index} className="border-3 border-[#1a1a1a] p-6 space-y-4">
+                <div
+                  key={index}
+                  className="border-3 border-[#1a1a1a] p-6 space-y-4"
+                >
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">SCHOOL/UNIVERSITY</label>
+                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                        SCHOOL/UNIVERSITY
+                      </label>
                       <input
                         type="text"
                         value={edu.school}
-                        onChange={(e) => {
+                        onChange={e => {
                           const newEdu = [...formData.education];
                           newEdu[index].school = e.target.value;
                           setFormData(prev => ({ ...prev, education: newEdu }));
@@ -528,11 +633,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">DEGREE</label>
+                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                        DEGREE
+                      </label>
                       <input
                         type="text"
                         value={edu.degree}
-                        onChange={(e) => {
+                        onChange={e => {
                           const newEdu = [...formData.education];
                           newEdu[index].degree = e.target.value;
                           setFormData(prev => ({ ...prev, education: newEdu }));
@@ -544,11 +651,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">FIELD OF STUDY</label>
+                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                      FIELD OF STUDY
+                    </label>
                     <input
                       type="text"
                       value={edu.fieldOfStudy}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newEdu = [...formData.education];
                         newEdu[index].fieldOfStudy = e.target.value;
                         setFormData(prev => ({ ...prev, education: newEdu }));
@@ -560,11 +669,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">START DATE</label>
+                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                        START DATE
+                      </label>
                       <input
                         type="date"
                         value={edu.startDate}
-                        onChange={(e) => {
+                        onChange={e => {
                           const newEdu = [...formData.education];
                           newEdu[index].startDate = e.target.value;
                           setFormData(prev => ({ ...prev, education: newEdu }));
@@ -573,11 +684,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">END DATE</label>
+                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                        END DATE
+                      </label>
                       <input
                         type="date"
                         value={edu.endDate}
-                        onChange={(e) => {
+                        onChange={e => {
                           const newEdu = [...formData.education];
                           newEdu[index].endDate = e.target.value;
                           setFormData(prev => ({ ...prev, education: newEdu }));
@@ -592,22 +705,26 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     <input
                       type="checkbox"
                       checked={edu.currentlyAttending}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newEdu = [...formData.education];
                         newEdu[index].currentlyAttending = e.target.checked;
                         setFormData(prev => ({ ...prev, education: newEdu }));
                       }}
                       className="w-5 h-5"
                     />
-                    <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">CURRENTLY ATTENDING</span>
+                    <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
+                      CURRENTLY ATTENDING
+                    </span>
                   </label>
 
                   <div>
-                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">GPA (OPTIONAL)</label>
+                    <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                      GPA (OPTIONAL)
+                    </label>
                     <input
                       type="text"
                       value={edu.gpa}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newEdu = [...formData.education];
                         newEdu[index].gpa = e.target.value;
                         setFormData(prev => ({ ...prev, education: newEdu }));
@@ -621,32 +738,47 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-mono font-bold text-[#1a1a1a] tracking-wide">LANGUAGES</h3>
+              <h3 className="text-lg font-mono font-bold text-[#1a1a1a] tracking-wide">
+                LANGUAGES
+              </h3>
               {formData.languages.map((lang, index) => (
-                <div key={index} className="border-3 border-[#1a1a1a] p-6 space-y-4">
+                <div
+                  key={index}
+                  className="border-3 border-[#1a1a1a] p-6 space-y-4"
+                >
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">LANGUAGE</label>
+                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                        LANGUAGE
+                      </label>
                       <input
                         type="text"
                         value={lang.language}
-                        onChange={(e) => {
+                        onChange={e => {
                           const newLangs = [...formData.languages];
                           newLangs[index].language = e.target.value;
-                          setFormData(prev => ({ ...prev, languages: newLangs }));
+                          setFormData(prev => ({
+                            ...prev,
+                            languages: newLangs,
+                          }));
                         }}
                         className="w-full"
                         placeholder="English"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">PROFICIENCY</label>
+                      <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-2 tracking-wide">
+                        PROFICIENCY
+                      </label>
                       <select
                         value={lang.proficiency}
-                        onChange={(e) => {
+                        onChange={e => {
                           const newLangs = [...formData.languages];
                           newLangs[index].proficiency = e.target.value;
-                          setFormData(prev => ({ ...prev, languages: newLangs }));
+                          setFormData(prev => ({
+                            ...prev,
+                            languages: newLangs,
+                          }));
                         }}
                         className="w-full"
                       >
@@ -661,14 +793,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     <input
                       type="checkbox"
                       checked={lang.fluent}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newLangs = [...formData.languages];
                         newLangs[index].fluent = e.target.checked;
                         setFormData(prev => ({ ...prev, languages: newLangs }));
                       }}
                       className="w-5 h-5"
                     />
-                    <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">FLUENT</span>
+                    <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
+                      FLUENT
+                    </span>
                   </label>
                 </div>
               ))}
@@ -680,11 +814,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         {currentStep === 4 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Upload your resume and list your key skills. We'll convert your resume into a secure Base64 string for safe storage and fast autofill. Add the skills you know — technical or soft — to highlight your strengths.
+              Upload your resume and list your key skills. We'll convert your
+              resume into a secure Base64 string for safe storage and fast
+              autofill. Add the skills you know — technical or soft — to
+              highlight your strengths.
             </p>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">UPLOAD RESUME (PDF/DOCX)</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                UPLOAD RESUME (PDF/DOCX)
+              </label>
               <div className="border-3 border-[#1a1a1a] p-6 text-center cursor-pointer hover:bg-[#f0f0f0] transition-colors">
                 <input
                   type="file"
@@ -693,43 +832,51 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   className="hidden"
                   id="resume-upload"
                 />
-                <label htmlFor="resume-upload" className="cursor-pointer flex flex-col items-center gap-3">
+                <label
+                  htmlFor="resume-upload"
+                  className="cursor-pointer flex flex-col items-center gap-3"
+                >
                   <Upload className="w-8 h-8 text-[#1a1a1a]" />
                   <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
-                    {formData.resumeFile ? formData.resumeFile.name : 'CLICK TO UPLOAD RESUME'}
+                    {formData.resumeFile
+                      ? formData.resumeFile.name
+                      : "CLICK TO UPLOAD RESUME"}
                   </span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">SKILLS</label>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                SKILLS
+              </label>
               <div className="flex gap-3 mb-4">
                 <input
                   type="text"
                   value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
+                  onChange={e => setNewSkill(e.target.value)}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
                       addSkill();
                     }
                   }}
                   className="flex-1"
                   placeholder="e.g., React, Python, Project Management"
                 />
-                <button
-                  type="button"
-                  onClick={addSkill}
-                  className="px-6"
-                >
+                <button type="button" onClick={addSkill} className="px-6">
                   ADD
                 </button>
               </div>
 
               <div className="flex flex-wrap gap-3">
                 {formData.skills.map((skill, index) => (
-                  <div key={index} className="border-3 border-[#1a1a1a] px-4 py-2 flex items-center gap-3">
-                    <span className="text-sm font-mono font-bold text-[#1a1a1a]">{skill}</span>
+                  <div
+                    key={index}
+                    className="border-3 border-[#1a1a1a] px-4 py-2 flex items-center gap-3"
+                  >
+                    <span className="text-sm font-mono font-bold text-[#1a1a1a]">
+                      {skill}
+                    </span>
                     <button
                       type="button"
                       onClick={() => removeSkill(index)}
@@ -748,12 +895,15 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         {currentStep === 5 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Almost there! Add your online links — GitHub, LinkedIn, Portfolio — and some optional eligibility details.
+              Almost there! Add your online links — GitHub, LinkedIn, Portfolio
+              — and some optional eligibility details.
             </p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">GITHUB URL</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  GITHUB URL
+                </label>
                 <input
                   type="url"
                   name="githubUrl"
@@ -765,7 +915,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">LINKEDIN URL</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  LINKEDIN URL
+                </label>
                 <input
                   type="url"
                   name="linkedinUrl"
@@ -777,7 +929,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">PORTFOLIO / WEBSITE URL</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  PORTFOLIO / WEBSITE URL
+                </label>
                 <input
                   type="url"
                   name="portfolioUrl"
@@ -789,7 +943,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">WORK AUTHORIZATION</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  WORK AUTHORIZATION
+                </label>
                 <input
                   type="text"
                   name="workAuthorization"
@@ -808,11 +964,15 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   onChange={handleInputChange}
                   className="w-5 h-5"
                 />
-                <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">SPONSORSHIP REQUIRED</span>
+                <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
+                  SPONSORSHIP REQUIRED
+                </span>
               </label>
 
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">DISABILITY STATUS (OPTIONAL)</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  DISABILITY STATUS (OPTIONAL)
+                </label>
                 <input
                   type="text"
                   name="disabilityStatus"
@@ -824,7 +984,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">VETERAN STATUS (OPTIONAL)</label>
+                <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                  VETERAN STATUS (OPTIONAL)
+                </label>
                 <input
                   type="text"
                   name="veteranStatus"
@@ -837,7 +999,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">AGE</label>
+                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                    AGE
+                  </label>
                   <input
                     type="number"
                     name="age"
@@ -849,7 +1013,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">GENDER</label>
+                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                    GENDER
+                  </label>
                   <input
                     type="text"
                     name="gender"
@@ -861,7 +1027,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">ETHNICITY</label>
+                  <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                    ETHNICITY
+                  </label>
                   <input
                     type="text"
                     name="ethnicity"
@@ -888,10 +1056,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </button>
 
           {currentStep === steps.length - 1 ? (
-            <button
-              onClick={handleSubmit}
-              className="ml-auto"
-            >
+            <button onClick={handleSubmit} className="ml-auto">
               SUBMIT
             </button>
           ) : (
@@ -908,22 +1073,28 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       {/* Right Column: Progress Panel */}
       <div className="hidden lg:flex w-80 bg-white border-l-3 border-[#1a1a1a] p-8 flex-col">
-        <h2 className="text-xl font-mono font-bold text-[#1a1a1a] mb-8 tracking-wide">PROGRESS</h2>
+        <h2 className="text-xl font-mono font-bold text-[#1a1a1a] mb-8 tracking-wide">
+          PROGRESS
+        </h2>
         <div className="space-y-4 flex-1">
           {steps.map((step, index) => (
             <div
               key={index}
               className={`p-4 border-3 cursor-pointer transition-colors ${
                 index === currentStep
-                  ? 'bg-[#0066ff] text-white border-[#0066ff]'
+                  ? "bg-[#0066ff] text-white border-[#0066ff]"
                   : index < currentStep
-                  ? 'bg-[#f0f0f0] border-[#1a1a1a]'
-                  : 'border-[#1a1a1a]'
+                    ? "bg-[#f0f0f0] border-[#1a1a1a]"
+                    : "border-[#1a1a1a]"
               }`}
               onClick={() => setCurrentStep(index)}
             >
-              <div className="text-xs font-mono font-bold tracking-widest">STEP {step.number}</div>
-              <div className="text-sm font-mono font-bold mt-1">{step.title}</div>
+              <div className="text-xs font-mono font-bold tracking-widest">
+                STEP {step.number}
+              </div>
+              <div className="text-sm font-mono font-bold mt-1">
+                {step.title}
+              </div>
             </div>
           ))}
         </div>

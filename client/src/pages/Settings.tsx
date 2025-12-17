@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Save, Bell, Shield, Eye } from 'lucide-react';
-import Layout from '@/components/Layout';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Save, Bell, Shield, Eye } from "lucide-react";
+import Layout from "@/components/Layout";
 
 interface SettingsData {
   emailNotifications: boolean;
@@ -19,9 +19,9 @@ export default function Settings() {
     applicationReminders: true,
     weeklyDigest: false,
     twoFactorAuth: false,
-    dataPrivacy: 'private',
-    theme: 'light',
-    language: 'english',
+    dataPrivacy: "private",
+    theme: "light",
+    language: "english",
   });
 
   const [isSaved, setIsSaved] = useState(false);
@@ -69,24 +69,32 @@ export default function Settings() {
         <div className="bg-card border border-border rounded-lg p-8">
           <div className="flex items-center gap-3 mb-6">
             <Bell className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Notifications</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Notifications
+            </h2>
           </div>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
               <div>
-                <p className="text-foreground font-medium">Email Notifications</p>
-                <p className="text-sm text-muted-foreground mt-1">Receive email updates about your applications</p>
+                <p className="text-foreground font-medium">
+                  Email Notifications
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Receive email updates about your applications
+                </p>
               </div>
               <button
-                onClick={() => handleToggle('emailNotifications')}
+                onClick={() => handleToggle("emailNotifications")}
                 className={`w-12 h-7 rounded-full transition-colors ${
-                  settings.emailNotifications ? 'bg-primary' : 'bg-muted'
+                  settings.emailNotifications ? "bg-primary" : "bg-muted"
                 }`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                    settings.emailNotifications ? 'translate-x-6' : 'translate-x-1'
+                    settings.emailNotifications
+                      ? "translate-x-6"
+                      : "translate-x-1"
                   }`}
                 />
               </button>
@@ -94,18 +102,24 @@ export default function Settings() {
 
             <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
               <div>
-                <p className="text-foreground font-medium">Application Reminders</p>
-                <p className="text-sm text-muted-foreground mt-1">Get reminders to follow up on pending applications</p>
+                <p className="text-foreground font-medium">
+                  Application Reminders
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Get reminders to follow up on pending applications
+                </p>
               </div>
               <button
-                onClick={() => handleToggle('applicationReminders')}
+                onClick={() => handleToggle("applicationReminders")}
                 className={`w-12 h-7 rounded-full transition-colors ${
-                  settings.applicationReminders ? 'bg-primary' : 'bg-muted'
+                  settings.applicationReminders ? "bg-primary" : "bg-muted"
                 }`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                    settings.applicationReminders ? 'translate-x-6' : 'translate-x-1'
+                    settings.applicationReminders
+                      ? "translate-x-6"
+                      : "translate-x-1"
                   }`}
                 />
               </button>
@@ -114,17 +128,19 @@ export default function Settings() {
             <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
               <div>
                 <p className="text-foreground font-medium">Weekly Digest</p>
-                <p className="text-sm text-muted-foreground mt-1">Receive a weekly summary of your application activity</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Receive a weekly summary of your application activity
+                </p>
               </div>
               <button
-                onClick={() => handleToggle('weeklyDigest')}
+                onClick={() => handleToggle("weeklyDigest")}
                 className={`w-12 h-7 rounded-full transition-colors ${
-                  settings.weeklyDigest ? 'bg-primary' : 'bg-muted'
+                  settings.weeklyDigest ? "bg-primary" : "bg-muted"
                 }`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                    settings.weeklyDigest ? 'translate-x-6' : 'translate-x-1'
+                    settings.weeklyDigest ? "translate-x-6" : "translate-x-1"
                   }`}
                 />
               </button>
@@ -136,39 +152,53 @@ export default function Settings() {
         <div className="bg-card border border-border rounded-lg p-8">
           <div className="flex items-center gap-3 mb-6">
             <Shield className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Privacy & Security</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Privacy & Security
+            </h2>
           </div>
-          
+
           <div className="space-y-6">
             <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
               <div>
-                <p className="text-foreground font-medium">Two-Factor Authentication</p>
-                <p className="text-sm text-muted-foreground mt-1">Add an extra layer of security to your account</p>
+                <p className="text-foreground font-medium">
+                  Two-Factor Authentication
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Add an extra layer of security to your account
+                </p>
               </div>
               <button
-                onClick={() => handleToggle('twoFactorAuth')}
+                onClick={() => handleToggle("twoFactorAuth")}
                 className={`w-12 h-7 rounded-full transition-colors ${
-                  settings.twoFactorAuth ? 'bg-primary' : 'bg-muted'
+                  settings.twoFactorAuth ? "bg-primary" : "bg-muted"
                 }`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                    settings.twoFactorAuth ? 'translate-x-6' : 'translate-x-1'
+                    settings.twoFactorAuth ? "translate-x-6" : "translate-x-1"
                   }`}
                 />
               </button>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-3">Data Privacy</label>
+              <label className="block text-sm font-medium text-foreground mb-3">
+                Data Privacy
+              </label>
               <select
                 value={settings.dataPrivacy}
-                onChange={(e) => handleChange('dataPrivacy', e.target.value)}
+                onChange={e => handleChange("dataPrivacy", e.target.value)}
                 className="w-full px-4 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
-                <option value="private">Private - Only you can see your data</option>
-                <option value="friends">Friends Only - Share with connections</option>
-                <option value="public">Public - Anyone can see your profile</option>
+                <option value="private">
+                  Private - Only you can see your data
+                </option>
+                <option value="friends">
+                  Friends Only - Share with connections
+                </option>
+                <option value="public">
+                  Public - Anyone can see your profile
+                </option>
               </select>
             </div>
           </div>
@@ -178,15 +208,19 @@ export default function Settings() {
         <div className="bg-card border border-border rounded-lg p-8">
           <div className="flex items-center gap-3 mb-6">
             <Eye className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Appearance</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Appearance
+            </h2>
           </div>
-          
+
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-3">Theme</label>
+              <label className="block text-sm font-medium text-foreground mb-3">
+                Theme
+              </label>
               <select
                 value={settings.theme}
-                onChange={(e) => handleChange('theme', e.target.value)}
+                onChange={e => handleChange("theme", e.target.value)}
                 className="w-full px-4 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="light">Light Mode</option>
@@ -196,10 +230,12 @@ export default function Settings() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-3">Language</label>
+              <label className="block text-sm font-medium text-foreground mb-3">
+                Language
+              </label>
               <select
                 value={settings.language}
-                onChange={(e) => handleChange('language', e.target.value)}
+                onChange={e => handleChange("language", e.target.value)}
                 className="w-full px-4 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="english">English</option>
@@ -214,8 +250,10 @@ export default function Settings() {
 
         {/* Danger Zone */}
         <div className="bg-card border border-red-200 dark:border-red-900/50 rounded-lg p-8">
-          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-6">Danger Zone</h2>
-          
+          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-6">
+            Danger Zone
+          </h2>
+
           <div className="space-y-3">
             <Button variant="destructive" className="w-full">
               Reset All Data

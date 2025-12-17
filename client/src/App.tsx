@@ -60,22 +60,27 @@ function Router({ onboardingComplete, onOnboardingComplete }: RouterProps) {
 
 function App() {
   const [onboardingComplete, setOnboardingComplete] = useState(() => {
-    const stored = localStorage.getItem('onboardingComplete');
+    const stored = localStorage.getItem("onboardingComplete");
     return stored ? JSON.parse(stored) : false;
   });
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    localStorage.setItem('onboardingComplete', JSON.stringify(onboardingComplete));
+    localStorage.setItem(
+      "onboardingComplete",
+      JSON.stringify(onboardingComplete)
+    );
   }, [onboardingComplete]);
 
   useEffect(() => {
     // Check for popup mode query parameter or detect small window size
     const params = new URLSearchParams(window.location.search);
-    const isPopupMode = params.get('mode') === 'popup' || (window.innerWidth < 500 && window.innerHeight < 800);
+    const isPopupMode =
+      params.get("mode") === "popup" ||
+      (window.innerWidth < 500 && window.innerHeight < 800);
 
-    if (isPopupMode && location !== '/popup') {
-      setLocation('/popup');
+    if (isPopupMode && location !== "/popup") {
+      setLocation("/popup");
     }
   }, [location, setLocation]);
 
@@ -84,13 +89,16 @@ function App() {
   };
 
   return (
-    <ErrorBoundary >
+    <ErrorBoundary>
       <ThemeProvider
-        defaultTheme="light"        // switchable
+        defaultTheme="light" // switchable
       >
         <TooltipProvider>
           <Toaster />
-          <Router onboardingComplete={onboardingComplete} onOnboardingComplete={handleOnboardingComplete} />
+          <Router
+            onboardingComplete={onboardingComplete}
+            onOnboardingComplete={handleOnboardingComplete}
+          />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

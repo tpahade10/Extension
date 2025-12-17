@@ -3,15 +3,8 @@
   "name": "Profile AutoFill",
   "version": "1.0.0",
   "description": "Smart onboarding extension that autofills forms with your profile information",
-  "permissions": [
-    "storage",
-    "activeTab",
-    "scripting",
-    "webRequest"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["storage", "activeTab", "scripting", "webRequest"],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "index.html?mode=popup",
     "default_title": "SpeedyApply - Smart Job Application",

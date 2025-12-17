@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
-import { BarChart3, User, Settings, Zap } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import { BarChart3, User, Settings, Zap } from "lucide-react";
 
 export default function ExtensionPopup() {
   const [, setLocation] = useLocation();
@@ -10,8 +10,8 @@ export default function ExtensionPopup() {
 
   useEffect(() => {
     // Load data from localStorage
-    const profileData = localStorage.getItem('profileData');
-    const todayApps = localStorage.getItem('todayApplications') || '1';
+    const profileData = localStorage.getItem("profileData");
+    const todayApps = localStorage.getItem("todayApplications") || "1";
     setTodayApplications(parseInt(todayApps));
   }, []);
 
@@ -19,10 +19,12 @@ export default function ExtensionPopup() {
 
   const openFullApp = (path: string) => {
     // Opens the full app in a new tab/window or navigates
-    if (typeof chrome !== 'undefined' && chrome.tabs) {
+    if (typeof chrome !== "undefined" && chrome.tabs) {
       chrome.runtime.getManifest(); // Check if we're in extension context
       try {
-        chrome.tabs.create({ url: `chrome-extension://${chrome.runtime.id}${path}` });
+        chrome.tabs.create({
+          url: `chrome-extension://${chrome.runtime.id}${path}`,
+        });
         window.close();
       } catch (e) {
         // Fallback: navigate in current window
@@ -36,7 +38,7 @@ export default function ExtensionPopup() {
 
   const handleAutofillToggle = () => {
     setAutofillEnabled(!autofillEnabled);
-    localStorage.setItem('autofillEnabled', JSON.stringify(!autofillEnabled));
+    localStorage.setItem("autofillEnabled", JSON.stringify(!autofillEnabled));
   };
 
   return (
@@ -57,7 +59,10 @@ export default function ExtensionPopup() {
         <div className="flex justify-center">
           <div className="relative w-48 h-48">
             {/* Background Circle */}
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <svg
+              className="w-full h-full transform -rotate-90"
+              viewBox="0 0 100 100"
+            >
               {/* Gray background ring */}
               <circle
                 cx="50"
@@ -77,15 +82,21 @@ export default function ExtensionPopup() {
                 strokeWidth="8"
                 strokeDasharray={`${(progressPercentage / 100) * 283} 283`}
                 strokeLinecap="round"
-                style={{ transition: 'stroke-dasharray 0.5s ease' }}
+                style={{ transition: "stroke-dasharray 0.5s ease" }}
               />
             </svg>
 
             {/* Center Content */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="text-5xl font-bold text-blue-400">{todayApplications}</div>
-              <div className="text-sm text-slate-300 mt-2">Application Today</div>
-              <div className="text-xs text-slate-400 mt-3">Goal: {goalApplications}</div>
+              <div className="text-5xl font-bold text-blue-400">
+                {todayApplications}
+              </div>
+              <div className="text-sm text-slate-300 mt-2">
+                Application Today
+              </div>
+              <div className="text-xs text-slate-400 mt-3">
+                Goal: {goalApplications}
+              </div>
             </div>
           </div>
         </div>
@@ -101,21 +112,21 @@ export default function ExtensionPopup() {
             {/* Action Buttons */}
             <div className="flex justify-center gap-4 pt-2">
               <button
-                onClick={() => openFullApp('/analytics')}
+                onClick={() => openFullApp("/analytics")}
                 className="w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors flex items-center justify-center shadow-lg hover:shadow-xl"
                 title="Analytics"
               >
                 <BarChart3 className="w-6 h-6 text-white" />
               </button>
               <button
-                onClick={() => openFullApp('/profile')}
+                onClick={() => openFullApp("/profile")}
                 className="w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors flex items-center justify-center shadow-lg hover:shadow-xl"
                 title="Profile"
               >
                 <User className="w-6 h-6 text-white" />
               </button>
               <button
-                onClick={() => openFullApp('/settings')}
+                onClick={() => openFullApp("/settings")}
                 className="w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors flex items-center justify-center shadow-lg hover:shadow-xl"
                 title="Settings"
               >
@@ -135,7 +146,9 @@ export default function ExtensionPopup() {
                 onChange={handleAutofillToggle}
                 className="w-5 h-5 rounded bg-slate-600 border border-slate-500 cursor-pointer accent-blue-500"
               />
-              <span className="text-sm font-medium text-white">Autofill Enabled</span>
+              <span className="text-sm font-medium text-white">
+                Autofill Enabled
+              </span>
             </label>
           </div>
         </div>

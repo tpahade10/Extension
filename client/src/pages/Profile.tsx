@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Save, Download, Upload, Plus, Trash2 } from 'lucide-react';
-import Layout from '@/components/Layout';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Save, Download, Upload, Plus, Trash2 } from "lucide-react";
+import Layout from "@/components/Layout";
 
 interface WorkExperience {
   id: string;
@@ -51,65 +51,70 @@ interface ProfileData {
 
 export default function Profile() {
   const [formData, setFormData] = useState<ProfileData>({
-    firstName: 'Tarun',
-    lastName: 'Pahade',
-    email: 'tarunpahade@gmail.com',
-    phone: '+1 (555) 123-4567',
-    addressLine1: '601 Maple Ave, Flirbert Road',
-    addressLine2: '',
-    city: 'Armonk',
-    state: 'Maharashtra',
-    postalCode: '41001',
-    country: 'United States',
-    linkedinUrl: 'https://www.linkedin.com/in/tarun-pahade',
-    githubUrl: 'https://github.com/tarunpahade',
-    portfolioUrl: 'https://tarunpahade.dev',
-    resumeFileName: 'My Resume (1).pdf',
-    resumeUploadDate: 'Dec 16, 2025, 06:26 PM',
-    workAuthorization: 'Yes',
+    firstName: "Tarun",
+    lastName: "Pahade",
+    email: "tarunpahade@gmail.com",
+    phone: "+1 (555) 123-4567",
+    addressLine1: "601 Maple Ave, Flirbert Road",
+    addressLine2: "",
+    city: "Armonk",
+    state: "Maharashtra",
+    postalCode: "41001",
+    country: "United States",
+    linkedinUrl: "https://www.linkedin.com/in/tarun-pahade",
+    githubUrl: "https://github.com/tarunpahade",
+    portfolioUrl: "https://tarunpahade.dev",
+    resumeFileName: "My Resume (1).pdf",
+    resumeUploadDate: "Dec 16, 2025, 06:26 PM",
+    workAuthorization: "Yes",
     visaSponsorshipRequired: false,
-    disabilityStatus: 'No',
-    veteranStatus: 'No',
-    age: '20',
-    gender: 'Male',
-    ethnicity: 'Asian',
-    skills: ['Python', 'JavaScript', 'React', 'Node.js', 'SQL'],
+    disabilityStatus: "No",
+    veteranStatus: "No",
+    age: "20",
+    gender: "Male",
+    ethnicity: "Asian",
+    skills: ["Python", "JavaScript", "React", "Node.js", "SQL"],
   });
 
   const [workExperience, setWorkExperience] = useState<WorkExperience[]>([
     {
-      id: '1',
-      company: 'Acme Corp',
-      position: 'Software Engineer',
-      startDate: 'Jun 2024',
-      endDate: 'Aug 2024',
+      id: "1",
+      company: "Acme Corp",
+      position: "Software Engineer",
+      startDate: "Jun 2024",
+      endDate: "Aug 2024",
       currentlyWorking: false,
-      description: 'Responsible for collecting, cleaning, data maintaining ETL pipelines Developing AI on google cloud model',
+      description:
+        "Responsible for collecting, cleaning, data maintaining ETL pipelines Developing AI on google cloud model",
     },
   ]);
 
   const [education, setEducation] = useState<Education[]>([
     {
-      id: '1',
-      school: 'Nath School of Business & Technology',
-      degree: 'Bachelor',
-      fieldOfStudy: 'Computer Science',
-      startDate: 'Mar 2024',
-      endDate: 'May 2026',
-      gpa: '8.40',
+      id: "1",
+      school: "Nath School of Business & Technology",
+      degree: "Bachelor",
+      fieldOfStudy: "Computer Science",
+      startDate: "Mar 2024",
+      endDate: "May 2026",
+      gpa: "8.40",
     },
   ]);
 
-  const [newSkill, setNewSkill] = useState('');
+  const [newSkill, setNewSkill] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
     setIsSaved(false);
   };
@@ -120,7 +125,7 @@ export default function Profile() {
         ...prev,
         skills: [...prev.skills, newSkill],
       }));
-      setNewSkill('');
+      setNewSkill("");
     }
   };
 
@@ -134,12 +139,12 @@ export default function Profile() {
   const addWorkExperience = () => {
     const newWork: WorkExperience = {
       id: Date.now().toString(),
-      company: '',
-      position: '',
-      startDate: '',
-      endDate: '',
+      company: "",
+      position: "",
+      startDate: "",
+      endDate: "",
       currentlyWorking: false,
-      description: '',
+      description: "",
     };
     setWorkExperience([...workExperience, newWork]);
   };
@@ -148,19 +153,24 @@ export default function Profile() {
     setWorkExperience(workExperience.filter(w => w.id !== id));
   };
 
-  const updateWorkExperience = (id: string, updates: Partial<WorkExperience>) => {
-    setWorkExperience(workExperience.map(w => w.id === id ? { ...w, ...updates } : w));
+  const updateWorkExperience = (
+    id: string,
+    updates: Partial<WorkExperience>
+  ) => {
+    setWorkExperience(
+      workExperience.map(w => (w.id === id ? { ...w, ...updates } : w))
+    );
   };
 
   const addEducation = () => {
     const newEdu: Education = {
       id: Date.now().toString(),
-      school: '',
-      degree: '',
-      fieldOfStudy: '',
-      startDate: '',
-      endDate: '',
-      gpa: '',
+      school: "",
+      degree: "",
+      fieldOfStudy: "",
+      startDate: "",
+      endDate: "",
+      gpa: "",
     };
     setEducation([...education, newEdu]);
   };
@@ -170,31 +180,34 @@ export default function Profile() {
   };
 
   const updateEducation = (id: string, updates: Partial<Education>) => {
-    setEducation(education.map(e => e.id === id ? { ...e, ...updates } : e));
+    setEducation(education.map(e => (e.id === id ? { ...e, ...updates } : e)));
   };
 
   const handleSave = () => {
     setIsSaved(true);
-    localStorage.setItem('profileData', JSON.stringify({ formData, workExperience, education }));
+    localStorage.setItem(
+      "profileData",
+      JSON.stringify({ formData, workExperience, education })
+    );
     setTimeout(() => setIsSaved(false), 3000);
   };
 
   const handleImportProfile = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = (e) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = e => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = event => {
           try {
             const data = JSON.parse(event.target?.result as string);
             setFormData(data.formData);
             setWorkExperience(data.workExperience);
             setEducation(data.education);
           } catch (error) {
-            alert('Failed to import profile');
+            alert("Failed to import profile");
           }
         };
         reader.readAsText(file);
@@ -206,9 +219,9 @@ export default function Profile() {
   const handleExportProfile = () => {
     const data = { formData, workExperience, education };
     const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `profile-${Date.now()}.json`;
     a.click();
@@ -221,7 +234,11 @@ export default function Profile() {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-foreground">Profile</h1>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={handleImportProfile} className="gap-2">
+            <Button
+              variant="outline"
+              onClick={handleImportProfile}
+              className="gap-2"
+            >
               <Upload className="w-4 h-4" />
               Import Profile
             </Button>
@@ -246,10 +263,12 @@ export default function Profile() {
               <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
                 <span>👤</span> Personal Information
               </h2>
-              
+
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Legal Name</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Legal Name
+                  </label>
                   <input
                     type="text"
                     name="firstName"
@@ -259,7 +278,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Languages</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Languages
+                  </label>
                   <select className="w-full px-4 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
                     <option>English, Advanced</option>
                   </select>
@@ -272,10 +293,12 @@ export default function Profile() {
               <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
                 <span>📞</span> Contact Information
               </h2>
-              
+
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Address</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Address
+                  </label>
                   <input
                     type="text"
                     name="addressLine1"
@@ -285,7 +308,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Phone
+                  </label>
                   <input
                     type="tel"
                     name="phone"
@@ -295,7 +320,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Email</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -319,8 +346,11 @@ export default function Profile() {
               </div>
 
               <div className="space-y-6">
-                {workExperience.map((work) => (
-                  <div key={work.id} className="pb-6 border-b border-border last:border-b-0">
+                {workExperience.map(work => (
+                  <div
+                    key={work.id}
+                    className="pb-6 border-b border-border last:border-b-0"
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="grid grid-cols-2 gap-4 mb-4">
@@ -328,21 +358,33 @@ export default function Profile() {
                             type="text"
                             placeholder="Company"
                             value={work.company}
-                            onChange={(e) => updateWorkExperience(work.id, { company: e.target.value })}
+                            onChange={e =>
+                              updateWorkExperience(work.id, {
+                                company: e.target.value,
+                              })
+                            }
                             className="px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                           />
                           <input
                             type="text"
                             placeholder="Position"
                             value={work.position}
-                            onChange={(e) => updateWorkExperience(work.id, { position: e.target.value })}
+                            onChange={e =>
+                              updateWorkExperience(work.id, {
+                                position: e.target.value,
+                              })
+                            }
                             className="px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                           />
                         </div>
                         <textarea
                           placeholder="Description"
                           value={work.description}
-                          onChange={(e) => updateWorkExperience(work.id, { description: e.target.value })}
+                          onChange={e =>
+                            updateWorkExperience(work.id, {
+                              description: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm resize-none"
                           rows={2}
                         />
@@ -351,24 +393,38 @@ export default function Profile() {
                             type="text"
                             placeholder="Start Date"
                             value={work.startDate}
-                            onChange={(e) => updateWorkExperience(work.id, { startDate: e.target.value })}
+                            onChange={e =>
+                              updateWorkExperience(work.id, {
+                                startDate: e.target.value,
+                              })
+                            }
                             className="px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                           />
                           <input
                             type="text"
                             placeholder="End Date"
                             value={work.endDate}
-                            onChange={(e) => updateWorkExperience(work.id, { endDate: e.target.value })}
+                            onChange={e =>
+                              updateWorkExperience(work.id, {
+                                endDate: e.target.value,
+                              })
+                            }
                             className="px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                           />
                           <label className="flex items-center gap-2 px-3 py-2 bg-background border border-input rounded-md text-sm">
                             <input
                               type="checkbox"
                               checked={work.currentlyWorking}
-                              onChange={(e) => updateWorkExperience(work.id, { currentlyWorking: e.target.checked })}
+                              onChange={e =>
+                                updateWorkExperience(work.id, {
+                                  currentlyWorking: e.target.checked,
+                                })
+                              }
                               className="rounded"
                             />
-                            <span className="text-foreground">Currently Working</span>
+                            <span className="text-foreground">
+                              Currently Working
+                            </span>
                           </label>
                         </div>
                       </div>
@@ -396,8 +452,11 @@ export default function Profile() {
               </div>
 
               <div className="space-y-6">
-                {education.map((edu) => (
-                  <div key={edu.id} className="pb-6 border-b border-border last:border-b-0">
+                {education.map(edu => (
+                  <div
+                    key={edu.id}
+                    className="pb-6 border-b border-border last:border-b-0"
+                  >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="text-sm text-muted-foreground mb-2">
@@ -429,8 +488,12 @@ export default function Profile() {
               </h2>
 
               <div className="mb-4">
-                <p className="text-sm text-foreground font-medium">{formData.resumeFileName}</p>
-                <p className="text-xs text-muted-foreground">Uploaded on: {formData.resumeUploadDate}</p>
+                <p className="text-sm text-foreground font-medium">
+                  {formData.resumeFileName}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Uploaded on: {formData.resumeUploadDate}
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -453,7 +516,9 @@ export default function Profile() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Authorized to work in your country:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Authorized to work in your country:
+                  </label>
                   <select
                     name="workAuthorization"
                     value={formData.workAuthorization}
@@ -473,10 +538,14 @@ export default function Profile() {
                     onChange={handleChange}
                     className="rounded"
                   />
-                  <label className="text-sm text-foreground font-medium">Visa sponsorship required for employment</label>
+                  <label className="text-sm text-foreground font-medium">
+                    Visa sponsorship required for employment
+                  </label>
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Disability:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Disability:
+                  </label>
                   <select
                     name="disabilityStatus"
                     value={formData.disabilityStatus}
@@ -489,7 +558,9 @@ export default function Profile() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Veteran:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Veteran:
+                  </label>
                   <select
                     name="veteranStatus"
                     value={formData.veteranStatus}
@@ -502,7 +573,9 @@ export default function Profile() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Age:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Age:
+                  </label>
                   <input
                     type="number"
                     name="age"
@@ -512,7 +585,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Gender:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Gender:
+                  </label>
                   <select
                     name="gender"
                     value={formData.gender}
@@ -526,7 +601,9 @@ export default function Profile() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Ethnicity:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Ethnicity:
+                  </label>
                   <select
                     name="ethnicity"
                     value={formData.ethnicity}
@@ -554,7 +631,9 @@ export default function Profile() {
 
               <div className="space-y-4 mb-6">
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">LinkedIn:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    LinkedIn:
+                  </label>
                   <input
                     type="url"
                     name="linkedinUrl"
@@ -565,7 +644,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">GitHub:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    GitHub:
+                  </label>
                   <input
                     type="url"
                     name="githubUrl"
@@ -576,7 +657,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Personal Portfolio:</label>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">
+                    Personal Portfolio:
+                  </label>
                   <input
                     type="url"
                     name="portfolioUrl"
@@ -589,9 +672,11 @@ export default function Profile() {
               </div>
 
               <div>
-                <p className="text-sm font-medium text-foreground mb-3">Skills</p>
+                <p className="text-sm font-medium text-foreground mb-3">
+                  Skills
+                </p>
                 <div className="flex flex-wrap gap-2 mb-3">
-                  {formData.skills.map((skill) => (
+                  {formData.skills.map(skill => (
                     <span
                       key={skill}
                       className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2"
@@ -611,8 +696,8 @@ export default function Profile() {
                     type="text"
                     placeholder="Add skill"
                     value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addSkill()}
+                    onChange={e => setNewSkill(e.target.value)}
+                    onKeyPress={e => e.key === "Enter" && addSkill()}
                     className="flex-1 px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                   />
                   <Button size="sm" onClick={addSkill} className="gap-1">
