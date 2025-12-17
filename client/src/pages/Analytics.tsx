@@ -131,8 +131,34 @@ export default function Analytics() {
                 className="w-full px-4 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <div className="flex items-center gap-2 bg-primary rounded-lg px-3 py-2 text-primary-foreground text-sm">
-              <span>All</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 bg-background rounded-lg p-1 border border-border">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded transition-colors ${
+                    viewMode === 'list'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                  title="List View"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('board')}
+                  className={`p-2 rounded transition-colors ${
+                    viewMode === 'board'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                  title="Board View"
+                >
+                  <Layers className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex items-center gap-2 bg-primary rounded-lg px-3 py-2 text-primary-foreground text-sm">
+                <span>All</span>
+              </div>
             </div>
           </div>
 
