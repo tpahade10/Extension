@@ -18,9 +18,20 @@ export default function ExtensionPopup() {
   const progressPercentage = (todayApplications / goalApplications) * 100;
 
   const openFullApp = (path: string) => {
-    // Opens the full app in a new tab/window
-    chrome.tabs.create({ url: `chrome-extension://${chrome.runtime.id}${path}` });
-    window.close();
+    // Opens the full app in a new tab/window or navigates
+    if (typeof chrome !== 'undefined' && chrome.tabs) {
+      chrome.runtime.getManifest(); // Check if we're in extension context
+      try {
+        chrome.tabs.create({ url: `chrome-extension://${chrome.runtime.id}${path}` });
+        window.close();
+      } catch (e) {
+        // Fallback: navigate in current window
+        setLocation(path);
+      }
+    } else {
+      // Not in extension context, just navigate
+      setLocation(path);
+    }
   };
 
   const handleAutofillToggle = () => {
