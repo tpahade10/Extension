@@ -5,14 +5,31 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Feedback from "./pages/Feedback";
+import { useState, useEffect } from "react";
 
+function Router({ onboardingComplete }: { onboardingComplete: boolean }) {
+  if (!onboardingComplete) {
+    return (
+      <Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    );
+  }
 
-function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/analytics"} component={Analytics} />
+      <Route path={"/profile"} component={Profile} />
+      <Route path={"/settings"} component={Settings} />
+      <Route path={"/feedback"} component={Feedback} />
+      <Route path={"/"} component={Analytics} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
@@ -24,6 +41,19 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [onboardingComplete, setOnboardingComplete] = useState(() => {
+    const stored = localStorage.getItem('onboardingComplete');
+    return stored ? JSON.parse(stored) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('onboardingComplete', JSON.stringify(onboardingComplete));
+  }, [onboardingComplete]);
+
+  const handleOnboardingComplete = () => {
+    setOnboardingComplete(true);
+  };
+
   return (
     <ErrorBoundary >
       <ThemeProvider
@@ -31,7 +61,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <Router onboardingComplete={onboardingComplete} />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
