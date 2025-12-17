@@ -180,6 +180,11 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     // Save to localStorage or send to background script
     localStorage.setItem('onboardingData', JSON.stringify(formData));
     alert('Profile setup complete! Your data has been saved.');
+
+    // Notify parent component that onboarding is complete
+    if (onComplete) {
+      onComplete();
+    }
   };
 
   return (
