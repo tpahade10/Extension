@@ -9,6 +9,7 @@ import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Feedback from "./pages/Feedback";
+import ExtensionPopup from "./pages/ExtensionPopup";
 import { useState, useEffect } from "react";
 
 interface RouterProps {
