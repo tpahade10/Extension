@@ -554,16 +554,37 @@ export default function Profile() {
 
               <div className="space-y-4 mb-6">
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium mb-1">LinkedIn:</p>
-                  <p className="text-sm text-foreground">{formData.linkedinUrl}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">LinkedIn:</label>
+                  <input
+                    type="url"
+                    name="linkedinUrl"
+                    value={formData.linkedinUrl}
+                    onChange={handleChange}
+                    placeholder="https://www.linkedin.com/in/yourprofile"
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium mb-1">GitHub:</p>
-                  <p className="text-sm text-foreground">{formData.githubUrl}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">GitHub:</label>
+                  <input
+                    type="url"
+                    name="githubUrl"
+                    value={formData.githubUrl}
+                    onChange={handleChange}
+                    placeholder="https://github.com/yourprofile"
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium mb-1">Personal Portfolio:</p>
-                  <p className="text-sm text-foreground">{formData.portfolioUrl}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Personal Portfolio:</label>
+                  <input
+                    type="url"
+                    name="portfolioUrl"
+                    value={formData.portfolioUrl}
+                    onChange={handleChange}
+                    placeholder="https://yourportfolio.com"
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  />
                 </div>
               </div>
 
