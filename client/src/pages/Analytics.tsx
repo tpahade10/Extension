@@ -69,43 +69,46 @@ export default function Analytics() {
           </Button>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-6">
-          <div className="bg-card border border-border rounded-lg p-6">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Today's Applications</p>
-            <p className="text-3xl font-bold text-foreground">1</p>
+        {/* Stats Cards and Chart */}
+        <div className="grid grid-cols-4 gap-6">
+          {/* Left Column - Stats Cards */}
+          <div className="space-y-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <p className="text-sm font-medium text-muted-foreground mb-2">Today's Applications</p>
+              <p className="text-3xl font-bold text-foreground">1</p>
+            </div>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <p className="text-sm font-medium text-muted-foreground mb-2">Monthly Applications</p>
+              <p className="text-3xl font-bold text-foreground">99</p>
+              <p className="text-xs text-muted-foreground mt-1">Last 30 days</p>
+            </div>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <p className="text-sm font-medium text-muted-foreground mb-2">Total Applications</p>
+              <p className="text-3xl font-bold text-foreground">286</p>
+            </div>
           </div>
-          <div className="bg-card border border-border rounded-lg p-6">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Monthly Applications</p>
-            <p className="text-3xl font-bold text-foreground">99</p>
-            <p className="text-xs text-muted-foreground mt-1">Last 30 days</p>
-          </div>
-          <div className="bg-card border border-border rounded-lg p-6">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Total Applications</p>
-            <p className="text-3xl font-bold text-foreground">286</p>
-          </div>
-        </div>
 
-        {/* Chart */}
-        <div className="bg-card border border-border rounded-lg p-6">
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">Application Trends</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="date" stroke="var(--foreground)" />
-                <YAxis stroke="var(--foreground)" />
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: 'var(--card)',
-                    border: `1px solid var(--border)`,
-                    borderRadius: '0.5rem',
-                  }}
-                  labelStyle={{ color: 'var(--foreground)' }}
-                />
-                <Bar dataKey="applications" fill="var(--primary)" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          {/* Right Column - Chart */}
+          <div className="col-span-3 bg-card border border-border rounded-lg p-6">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-foreground mb-4">Application Trends</h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="date" stroke="var(--foreground)" />
+                  <YAxis stroke="var(--foreground)" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--card)',
+                      border: `1px solid var(--border)`,
+                      borderRadius: '0.5rem',
+                    }}
+                    labelStyle={{ color: 'var(--foreground)' }}
+                  />
+                  <Bar dataKey="applications" fill="var(--primary)" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
