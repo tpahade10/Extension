@@ -11,11 +11,18 @@ import Settings from "./pages/Settings";
 import Feedback from "./pages/Feedback";
 import { useState, useEffect } from "react";
 
-function Router({ onboardingComplete }: { onboardingComplete: boolean }) {
+interface RouterProps {
+  onboardingComplete: boolean;
+  onOnboardingComplete: () => void;
+}
+
+function Router({ onboardingComplete, onOnboardingComplete }: RouterProps) {
   if (!onboardingComplete) {
     return (
       <Switch>
-        <Route path={"/"} component={Home} />
+        <Route path={"/"}>
+          <Home onComplete={onOnboardingComplete} />
+        </Route>
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>
