@@ -63,22 +63,18 @@ function App() {
     const stored = localStorage.getItem('onboardingComplete');
     return stored ? JSON.parse(stored) : false;
   });
-
-  const [forcePopup, setForcePopup] = useState(false);
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     localStorage.setItem('onboardingComplete', JSON.stringify(onboardingComplete));
   }, [onboardingComplete]);
 
   useEffect(() => {
-    // Detect if running as Chrome extension popup (narrow window)
-    // Extension popups are typically 400x600 or similar
-    if (window.innerWidth < 500 && window.innerHeight < 800) {
-      setForcePopup(true);
-      // Redirect to popup route
-      window.location.hash = '#/popup';
+    // Auto-detect if running as Chrome extension popup and route to popup view
+    if (window.innerWidth < 500 && window.innerHeight < 800 && location !== '/popup') {
+      setLocation('/popup');
     }
-  }, []);
+  }, [location, setLocation]);
 
   const handleOnboardingComplete = () => {
     setOnboardingComplete(true);
