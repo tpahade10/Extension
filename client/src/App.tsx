@@ -70,8 +70,11 @@ function App() {
   }, [onboardingComplete]);
 
   useEffect(() => {
-    // Auto-detect if running as Chrome extension popup and route to popup view
-    if (window.innerWidth < 500 && window.innerHeight < 800 && location !== '/popup') {
+    // Check for popup mode query parameter or detect small window size
+    const params = new URLSearchParams(window.location.search);
+    const isPopupMode = params.get('mode') === 'popup' || (window.innerWidth < 500 && window.innerHeight < 800);
+
+    if (isPopupMode && location !== '/popup') {
       setLocation('/popup');
     }
   }, [location, setLocation]);
