@@ -64,7 +64,11 @@ interface FormData {
   ethnicity: string;
 }
 
-const OnboardingWizard: React.FC = () => {
+interface OnboardingWizardProps {
+  onComplete?: () => void;
+}
+
+const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
