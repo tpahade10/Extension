@@ -42,6 +42,7 @@ const statuses = ['All', 'Applied', 'Rejected', 'Interviewing', 'Offer', 'Screen
 export default function Analytics() {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'list' | 'board'>('list');
 
   const filteredRecords = applicationRecords.filter(record => {
     const statusMatch = selectedStatus === 'All' || record.status === selectedStatus;
@@ -55,6 +56,12 @@ export default function Analytics() {
       return applicationRecords.length;
     }
     return applicationRecords.filter(r => r.status === status).length;
+  };
+
+  const boardStatuses = ['Applied', 'Screen', 'Interviewing', 'Offer', 'Rejected'];
+
+  const getRecordsByStatus = (status: string) => {
+    return applicationRecords.filter(record => record.status === status);
   };
 
   return (
