@@ -18,25 +18,35 @@ interface RouterProps {
 }
 
 function Router({ onboardingComplete, onOnboardingComplete }: RouterProps) {
-  if (!onboardingComplete) {
-    return (
-      <Switch>
-        <Route path={"/"}>
-          <Home onComplete={onOnboardingComplete} />
-        </Route>
-        <Route path={"/404"} component={NotFound} />
-        <Route component={NotFound} />
-      </Switch>
-    );
-  }
-
   return (
     <Switch>
-      <Route path={"/analytics"} component={Analytics} />
-      <Route path={"/profile"} component={Profile} />
-      <Route path={"/settings"} component={Settings} />
-      <Route path={"/feedback"} component={Feedback} />
-      <Route path={"/"} component={Analytics} />
+      {/* Extension Popup - Always Available */}
+      <Route path={"/popup"} component={ExtensionPopup} />
+
+      {/* Onboarding Routes */}
+      {!onboardingComplete && (
+        <>
+          <Route path={"/"}>
+            <Home onComplete={onOnboardingComplete} />
+          </Route>
+          <Route path={"/404"} component={NotFound} />
+          <Route component={NotFound} />
+        </>
+      )}
+
+      {/* Main App Routes */}
+      {onboardingComplete && (
+        <>
+          <Route path={"/analytics"} component={Analytics} />
+          <Route path={"/profile"} component={Profile} />
+          <Route path={"/settings"} component={Settings} />
+          <Route path={"/feedback"} component={Feedback} />
+          <Route path={"/"} component={Analytics} />
+          <Route path={"/404"} component={NotFound} />
+          <Route component={NotFound} />
+        </>
+      )}
+
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
