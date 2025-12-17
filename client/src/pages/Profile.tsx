@@ -453,32 +453,95 @@ export default function Profile() {
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-foreground font-medium">Authorized to work in your country:</p>
-                  <p className="text-sm text-foreground">{formData.workAuthorization}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Authorized to work in your country:</label>
+                  <select
+                    name="workAuthorization"
+                    value={formData.workAuthorization}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>Pending</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-background rounded-md border border-input">
+                  <input
+                    type="checkbox"
+                    name="visaSponsorshipRequired"
+                    checked={formData.visaSponsorshipRequired}
+                    onChange={handleChange}
+                    className="rounded"
+                  />
+                  <label className="text-sm text-foreground font-medium">Visa sponsorship required for employment</label>
                 </div>
                 <div>
-                  <p className="text-sm text-foreground font-medium">Visa sponsorship required for employment:</p>
-                  <p className="text-sm text-foreground">{formData.visaSponsorshipRequired ? 'Yes' : 'No'}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Disability:</label>
+                  <select
+                    name="disabilityStatus"
+                    value={formData.disabilityStatus}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  >
+                    <option>No</option>
+                    <option>Yes</option>
+                    <option>Prefer not to say</option>
+                  </select>
                 </div>
                 <div>
-                  <p className="text-sm text-foreground font-medium">Disability:</p>
-                  <p className="text-sm text-foreground">{formData.disabilityStatus}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Veteran:</label>
+                  <select
+                    name="veteranStatus"
+                    value={formData.veteranStatus}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  >
+                    <option>No</option>
+                    <option>Yes</option>
+                    <option>Prefer not to say</option>
+                  </select>
                 </div>
                 <div>
-                  <p className="text-sm text-foreground font-medium">Veteran:</p>
-                  <p className="text-sm text-foreground">{formData.veteranStatus}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Age:</label>
+                  <input
+                    type="number"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  />
                 </div>
                 <div>
-                  <p className="text-sm text-foreground font-medium">Age:</p>
-                  <p className="text-sm text-foreground">{formData.age}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Gender:</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  >
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Non-binary</option>
+                    <option>Prefer not to say</option>
+                  </select>
                 </div>
                 <div>
-                  <p className="text-sm text-foreground font-medium">Gender:</p>
-                  <p className="text-sm text-foreground">{formData.gender}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-foreground font-medium">Ethnicity:</p>
-                  <p className="text-sm text-foreground">{formData.ethnicity}</p>
+                  <label className="text-xs text-muted-foreground font-medium mb-2 block">Ethnicity:</label>
+                  <select
+                    name="ethnicity"
+                    value={formData.ethnicity}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  >
+                    <option>Asian</option>
+                    <option>Black or African American</option>
+                    <option>Hispanic or Latino</option>
+                    <option>Native American or Alaska Native</option>
+                    <option>Native Hawaiian or Pacific Islander</option>
+                    <option>White</option>
+                    <option>Two or more races</option>
+                    <option>Prefer not to say</option>
+                  </select>
                 </div>
               </div>
             </div>
