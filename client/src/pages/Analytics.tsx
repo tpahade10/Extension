@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
+import { Download, Plus, List, Layers } from 'lucide-react';
 import Layout from '@/components/Layout';
 
 const chartData = [
