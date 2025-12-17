@@ -1,8 +1,12 @@
 import OnboardingWizard from '@/components/OnboardingWizard';
 
+interface HomeProps {
+  onComplete?: () => void;
+}
+
 /**
  * Neo-Brutalist Onboarding Flow
- * 
+ *
  * Design Philosophy: Raw Grid Brutalism
  * - Heavy typography with IBM Plex Mono Bold for titles
  * - Thick 3px borders on all interactive elements
@@ -11,10 +15,10 @@ import OnboardingWizard from '@/components/OnboardingWizard';
  * - Instant, snappy transitions (100ms linear)
  * - No rounded corners; sharp, intentional aesthetic
  */
-export default function Home() {
+export default function Home({ onComplete }: HomeProps) {
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
-      <OnboardingWizard />
+      <OnboardingWizard onComplete={onComplete} />
     </div>
   );
 }
