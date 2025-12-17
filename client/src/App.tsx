@@ -68,7 +68,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router onboardingComplete={onboardingComplete} />
+          <Router onboardingComplete={onboardingComplete} onOnboardingComplete={handleOnboardingComplete} />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
