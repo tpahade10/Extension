@@ -1,18 +1,53 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Feedback from "./pages/Feedback";
+import ExtensionPopup from "./pages/ExtensionPopup";
+import { useState, useEffect } from "react";
 
+interface RouterProps {
+  onboardingComplete: boolean;
+  onOnboardingComplete: () => void;
+}
 
-function Router() {
+function Router({ onboardingComplete, onOnboardingComplete }: RouterProps) {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      {/* Extension Popup - Always Available */}
+      <Route path={"/popup"} component={ExtensionPopup} />
+
+      {/* Onboarding Routes */}
+      {!onboardingComplete && (
+        <>
+          <Route path={"/"}>
+            <Home onComplete={onOnboardingComplete} />
+          </Route>
+          <Route path={"/404"} component={NotFound} />
+          <Route component={NotFound} />
+        </>
+      )}
+
+      {/* Main App Routes */}
+      {onboardingComplete && (
+        <>
+          <Route path={"/analytics"} component={Analytics} />
+          <Route path={"/profile"} component={Profile} />
+          <Route path={"/settings"} component={Settings} />
+          <Route path={"/feedback"} component={Feedback} />
+          <Route path={"/"} component={Analytics} />
+          <Route path={"/404"} component={NotFound} />
+          <Route component={NotFound} />
+        </>
+      )}
+
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
@@ -24,14 +59,46 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [onboardingComplete, setOnboardingComplete] = useState(() => {
+    const stored = localStorage.getItem("onboardingComplete");
+    return stored ? JSON.parse(stored) : false;
+  });
+  const [location, setLocation] = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem(
+      "onboardingComplete",
+      JSON.stringify(onboardingComplete)
+    );
+  }, [onboardingComplete]);
+
+  useEffect(() => {
+    // Check for popup mode query parameter or detect small window size
+    const params = new URLSearchParams(window.location.search);
+    const isPopupMode =
+      params.get("mode") === "popup" ||
+      (window.innerWidth < 500 && window.innerHeight < 800);
+
+    if (isPopupMode && location !== "/popup") {
+      setLocation("/popup");
+    }
+  }, [location, setLocation]);
+
+  const handleOnboardingComplete = () => {
+    setOnboardingComplete(true);
+  };
+
   return (
-    <ErrorBoundary >
+    <ErrorBoundary>
       <ThemeProvider
-        defaultTheme="light"        // switchable
+        defaultTheme="light" // switchable
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <Router
+            onboardingComplete={onboardingComplete}
+            onOnboardingComplete={handleOnboardingComplete}
+          />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
