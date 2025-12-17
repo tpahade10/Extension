@@ -116,6 +116,8 @@ export default function Analytics() {
               <input
                 type="text"
                 placeholder="Search by Job or Company"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-4 py-2 rounded-md bg-background border border-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -125,7 +127,7 @@ export default function Analytics() {
           </div>
 
           {/* Status Filters */}
-          <div className="flex gap-2 mb-6 pb-4 border-b border-border">
+          <div className="flex gap-2 mb-6 pb-4 border-b border-border flex-wrap">
             {statuses.map((status) => (
               <button
                 key={status}
@@ -137,7 +139,7 @@ export default function Analytics() {
                 }`}
               >
                 {status === 'All' ? 'All Applications' : status}
-                {status !== 'All' && <span className="text-xs ml-2">({Math.floor(Math.random() * 50)})</span>}
+                <span className="text-xs ml-2">({getStatusCount(status)})</span>
               </button>
             ))}
           </div>
