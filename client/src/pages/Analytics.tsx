@@ -217,29 +217,53 @@ export default function Analytics() {
               <h2 className="text-lg font-semibold text-foreground mb-4">
                 Application Trends
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart
-                  data={chartData}
-                  margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="date" stroke="var(--foreground)" />
-                  <YAxis stroke="var(--foreground)" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: `1px solid var(--border)`,
-                      borderRadius: "0.5rem",
+              {viewMode === "list" ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="date" stroke="var(--foreground)" />
+                    <YAxis stroke="var(--foreground)" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "var(--card)",
+                        border: `1px solid var(--border)`,
+                        borderRadius: "0.5rem",
+                      }}
+                      labelStyle={{ color: "var(--foreground)" }}
+                    />
+                    <Bar
+                      dataKey="applications"
+                      fill="var(--primary)"
+                      radius={[8, 8, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <Box sx={{ width: "100%", height: 400 }}>
+                  <SankeyChart
+                    series={[
+                      {
+                        data: sankeyDataset,
+                        nodeWidth: 15,
+                        nodePadding: 20,
+                        layout: "horizontal",
+                        labelStyle: {
+                          fill: theme.palette.text.primary,
+                          fontSize: 12,
+                          fontWeight: 500,
+                        },
+                      },
+                    ]}
+                    margin={{ top: 10, bottom: 10, left: 10, right: 150 }}
+                    slotProps={{
+                      legend: { hidden: true },
                     }}
-                    labelStyle={{ color: "var(--foreground)" }}
                   />
-                  <Bar
-                    dataKey="applications"
-                    fill="var(--primary)"
-                    radius={[8, 8, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+                </Box>
+              )}
             </div>
           </div>
         </div>
