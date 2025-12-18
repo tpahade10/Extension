@@ -118,27 +118,13 @@ const statuses = [
   "Screen",
 ];
 
-const sankeyDataset = {
-  nodes: [
-    { id: "Applied", label: "Applied", color: "#3b82f6" },
-    { id: "Screen", label: "Screen", color: "#eab308" },
-    { id: "Interviewing", label: "Interviewing", color: "#a855f7" },
-    { id: "Offer", label: "Offer", color: "#22c55e" },
-    { id: "Rejected", label: "Rejected", color: "#ef4444" },
-    { id: "NoAnswer", label: "No Answer", color: "#6b7280" },
-  ],
-  links: [
-    { source: "Applied", target: "Screen", value: 69 },
-    { source: "Applied", target: "Interviewing", value: 26 },
-    { source: "Applied", target: "Offer", value: 8 },
-    { source: "Applied", target: "Rejected", value: 72 },
-    { source: "Applied", target: "NoAnswer", value: 145 },
-    { source: "Screen", target: "Interviewing", value: 32 },
-    { source: "Screen", target: "Rejected", value: 37 },
-    { source: "Interviewing", target: "Offer", value: 15 },
-    { source: "Interviewing", target: "Rejected", value: 43 },
-  ],
-};
+const statusDistributionData = [
+  { name: "Applied", value: 286, color: "#3b82f6" },
+  { name: "Screen", value: 69, color: "#eab308" },
+  { name: "Interviewing", value: 26, color: "#a855f7" },
+  { name: "Offer", value: 8, color: "#22c55e" },
+  { name: "Rejected", value: 72, color: "#ef4444" },
+];
 
 export default function Analytics() {
   const theme = useTheme();
