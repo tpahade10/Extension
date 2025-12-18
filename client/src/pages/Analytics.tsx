@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, Plus, List, Layers } from "lucide-react";
 import Layout from "@/components/Layout";
+import ApplicationBoard from "@/components/ApplicationBoard";
 
 const chartData = [
   { date: "Dec 17", applications: 3 },
