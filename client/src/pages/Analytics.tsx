@@ -8,11 +8,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Unstable_SankeyChart as SankeyChart } from "@mui/x-charts-pro/SankeyChart";
 import { Button } from "@/components/ui/button";
 import { Download, Plus, List, Layers } from "lucide-react";
 import Layout from "@/components/Layout";
 import ApplicationBoard from "@/components/ApplicationBoard";
+import ApplicationFunnel from "@/components/ApplicationFunnel";
 
 const chartData = [
   { date: "Dec 17", applications: 3 },
