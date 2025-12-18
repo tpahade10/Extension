@@ -6,23 +6,23 @@ interface FunnelStage {
   color: string;
 }
 
-const applicationFunnelData: FunnelStage[] = [
-  { name: "Applied", value: 286, color: "hsl(var(--chart-blue))" },
-  { name: "Screened", value: 189, color: "hsl(var(--chart-cyan))" },
-  { name: "Interviewing", value: 69, color: "hsl(var(--chart-purple))" },
-  { name: "Accepted", value: 8, color: "hsl(var(--chart-green))" },
+const spendingData: FunnelStage[] = [
+  { name: "Total Budget", value: 286, color: "hsl(var(--chart-violet))" },
+  { name: "Allocated", value: 189, color: "hsl(var(--chart-blue))" },
+  { name: "Spent", value: 142, color: "hsl(var(--chart-teal))" },
+  { name: "Remaining", value: 97, color: "hsl(var(--chart-emerald))" },
 ];
 
-export default function ApplicationFunnel() {
+const SpendingBreakdown = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const height = 320;
 
   const chartData = useMemo(() => {
-    const maxValue = Math.max(...applicationFunnelData.map((d) => d.value));
+    const maxValue = Math.max(...spendingData.map((d) => d.value));
     const minWidth = 35;
     const maxWidth = 100;
 
-    return applicationFunnelData.map((stage, index) => {
+    return spendingData.map((stage, index) => {
       const widthPercent = minWidth + (stage.value / maxValue) * (maxWidth - minWidth);
       return {
         ...stage,
@@ -31,6 +31,8 @@ export default function ApplicationFunnel() {
     });
   }, []);
 
+  const stageHeight = height / spendingData.length;
+
   return (
     <div
       className="bg-card border border-border rounded-xl p-6 shadow-card animate-slide-up"
@@ -38,11 +40,11 @@ export default function ApplicationFunnel() {
     >
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Application Funnel</h3>
-          <p className="text-sm text-muted-foreground">Candidate progression flow</p>
+          <h3 className="text-lg font-semibold text-foreground">Budget Flow Analysis</h3>
+          <p className="text-sm text-muted-foreground">Capital allocation funnel</p>
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="px-2 py-1 bg-secondary rounded-md">2025</span>
+          <span className="px-2 py-1 bg-secondary rounded-md">Q4 2024</span>
         </div>
       </div>
 
@@ -152,7 +154,7 @@ export default function ApplicationFunnel() {
               </div>
               <div className="text-right">
                 <span className="text-lg font-bold text-foreground drop-shadow-sm">
-                  {stage.value}
+                  ${stage.value}M
                 </span>
                 <span className="text-xs text-muted-foreground ml-2">
                   ({((stage.value / chartData[0].value) * 100).toFixed(0)}%)
@@ -175,10 +177,12 @@ export default function ApplicationFunnel() {
               style={{ backgroundColor: stage.color }}
             />
             <p className="text-xs text-muted-foreground">{stage.name}</p>
-            <p className="text-sm font-bold text-foreground">{stage.value}</p>
+            <p className="text-sm font-bold text-foreground">${stage.value}M</p>
           </div>
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default SpendingBreakdown;
