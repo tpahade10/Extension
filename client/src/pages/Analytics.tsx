@@ -116,25 +116,6 @@ const statuses = [
   "Screen",
 ];
 
-const sankeyData = {
-  links: [
-    { source: 0, target: 1, value: 69 },
-    { source: 0, target: 2, value: 72 },
-    { source: 0, target: 3, value: 26 },
-    { source: 1, target: 3, value: 32 },
-    { source: 1, target: 2, value: 37 },
-    { source: 3, target: 4, value: 15 },
-    { source: 3, target: 2, value: 11 },
-  ],
-  nodes: [
-    { id: "Applied", label: "Applied (286)" },
-    { id: "Screen", label: "Screen (69)" },
-    { id: "Rejected", label: "Rejected (72)" },
-    { id: "Interviewing", label: "Interviewing (26)" },
-    { id: "Offer", label: "Offer (8)" },
-  ],
-};
-
 export default function Analytics() {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
