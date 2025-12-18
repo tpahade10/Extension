@@ -227,27 +227,32 @@ export default function Analytics() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <Box sx={{ width: "100%", height: 400 }}>
-                  <SankeyChart
-                    series={[
-                      {
-                        data: sankeyDataset,
-                        nodeWidth: 15,
-                        nodePadding: 20,
-                        layout: "horizontal",
-                        labelStyle: {
-                          fill: theme.palette.text.primary,
-                          fontSize: 12,
-                          fontWeight: 500,
-                        },
-                      },
-                    ]}
-                    margin={{ top: 10, bottom: 10, left: 10, right: 150 }}
-                    slotProps={{
-                      legend: { hidden: true },
-                    }}
-                  />
-                </Box>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={statusDistributionData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: ${value}`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {statusDistributionData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "var(--card)",
+                        border: `1px solid var(--border)`,
+                        borderRadius: "0.5rem",
+                      }}
+                      labelStyle={{ color: "var(--foreground)" }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               )}
             </div>
           </div>
