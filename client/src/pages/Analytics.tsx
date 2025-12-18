@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, Plus, List, Layers } from "lucide-react";
 import Layout from "@/components/Layout";
+import ApplicationBoard from "@/components/ApplicationBoard";
+import ApplicationFunnel from "@/components/ApplicationFunnel";
 
 const chartData = [
   { date: "Dec 17", applications: 3 },
@@ -190,29 +192,33 @@ export default function Analytics() {
               <h2 className="text-lg font-semibold text-foreground mb-4">
                 Application Trends
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart
-                  data={chartData}
-                  margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="date" stroke="var(--foreground)" />
-                  <YAxis stroke="var(--foreground)" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: `1px solid var(--border)`,
-                      borderRadius: "0.5rem",
-                    }}
-                    labelStyle={{ color: "var(--foreground)" }}
-                  />
-                  <Bar
-                    dataKey="applications"
-                    fill="var(--primary)"
-                    radius={[8, 8, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+              {viewMode === "list" ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="date" stroke="var(--foreground)" />
+                    <YAxis stroke="var(--foreground)" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "var(--card)",
+                        border: `1px solid var(--border)`,
+                        borderRadius: "0.5rem",
+                      }}
+                      labelStyle={{ color: "var(--foreground)" }}
+                    />
+                    <Bar
+                      dataKey="applications"
+                      fill="var(--primary)"
+                      radius={[8, 8, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <ApplicationFunnel />
+              )}
             </div>
           </div>
         </div>
@@ -278,82 +284,92 @@ export default function Analytics() {
             ))}
           </div>
 
-          {/* Table Header */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
-                    Job Link
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
-                    Company Link
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
-                    Status
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
-                    Date Applied
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRecords.length > 0 ? (
-                  filteredRecords.map((record, idx) => (
-                    <tr
-                      key={idx}
-                      className="border-b border-border hover:bg-accent transition-colors"
-                    >
-                      <td className="py-3 px-4 text-foreground">
-                        {record.jobTitle}
-                      </td>
-                      <td className="py-3 px-4">
-                        <a
-                          href={record.company}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline"
-                        >
-                          {new URL(record.company).hostname}
-                        </a>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`inline-block px-3 py-1 rounded-md text-xs font-medium ${
-                            record.status === "Applied"
-                              ? "bg-blue-100 text-blue-900 dark:bg-blue-900/30 dark:text-blue-400"
-                              : record.status === "Rejected"
-                                ? "bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-400"
-                                : record.status === "Interviewing"
-                                  ? "bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-400"
-                                  : record.status === "Offer"
-                                    ? "bg-green-100 text-green-900 dark:bg-green-900/30 dark:text-green-400"
-                                    : record.status === "Screen"
-                                      ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-400"
-                                      : "bg-gray-100 text-gray-900 dark:bg-gray-900/30 dark:text-gray-400"
-                          }`}
-                        >
-                          {record.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-foreground">
-                        {record.date}
+          {/* List View */}
+          {viewMode === "list" && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
+                      Job Link
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
+                      Company Link
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
+                      Status
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground bg-primary text-primary-foreground">
+                      Date Applied
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRecords.length > 0 ? (
+                    filteredRecords.map((record, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-border hover:bg-accent transition-colors"
+                      >
+                        <td className="py-3 px-4 text-foreground">
+                          {record.jobTitle}
+                        </td>
+                        <td className="py-3 px-4">
+                          <a
+                            href={record.company}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            {new URL(record.company).hostname}
+                          </a>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`inline-block px-3 py-1 rounded-md text-xs font-medium ${
+                              record.status === "Applied"
+                                ? "bg-blue-100 text-blue-900 dark:bg-blue-900/30 dark:text-blue-400"
+                                : record.status === "Rejected"
+                                  ? "bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-400"
+                                  : record.status === "Interviewing"
+                                    ? "bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-400"
+                                    : record.status === "Offer"
+                                      ? "bg-green-100 text-green-900 dark:bg-green-900/30 dark:text-green-400"
+                                      : record.status === "Screen"
+                                        ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-400"
+                                        : "bg-gray-100 text-gray-900 dark:bg-gray-900/30 dark:text-gray-400"
+                            }`}
+                          >
+                            {record.status}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-foreground">
+                          {record.date}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="py-8 px-4 text-center text-muted-foreground"
+                      >
+                        No applications found matching your filters
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={4}
-                      className="py-8 px-4 text-center text-muted-foreground"
-                    >
-                      No applications found matching your filters
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Board View */}
+          {viewMode === "board" && (
+            <ApplicationBoard
+              applications={applicationRecords}
+              searchQuery={searchQuery}
+            />
+          )}
         </div>
       </div>
     </Layout>
