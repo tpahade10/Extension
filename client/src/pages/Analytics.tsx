@@ -217,14 +217,7 @@ export default function Analytics() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div style={{ width: "100%", height: 350 }}>
-                  <SankeyChart
-                    height={350}
-                    series={{
-                      data: sankeyData,
-                    }}
-                  />
-                </div>
+                <ApplicationFunnel />
               )}
             </div>
           </div>
