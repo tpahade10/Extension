@@ -127,7 +127,6 @@ const statusDistributionData = [
 ];
 
 export default function Analytics() {
-  const theme = useTheme();
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "board">("list");
