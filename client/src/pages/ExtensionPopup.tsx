@@ -56,10 +56,11 @@ export default function ExtensionPopup() {
   }, []);
 
   const checkForDetectedJob = () => {
-    if (typeof chrome !== "undefined" && chrome.runtime) {
-      chrome.runtime.sendMessage(
+    const chromeObj = (window as any).chrome;
+    if (chromeObj?.runtime) {
+      chromeObj.runtime.sendMessage(
         { action: "getDetectedJob" },
-        (response) => {
+        (response: any) => {
           if (response?.detectedJob) {
             setDetectedJob(response.detectedJob);
           }
