@@ -6,6 +6,13 @@ import ApplicationBoard from "@/components/ApplicationBoard";
 import ApplicationFunnel from "@/components/ApplicationFunnel";
 import ApplicationSankey from "@/components/ApplicationSankey";
 
+interface Application {
+  jobTitle: string;
+  company: string;
+  status: "Applied" | "Screen" | "Interviewing" | "Offer" | "Rejected";
+  date: string;
+}
+
 const chartData = [
   { date: "Dec 17", applications: 3 },
   { date: "Dec 18", applications: 4 },
