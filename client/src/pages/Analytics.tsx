@@ -182,32 +182,10 @@ export default function Analytics() {
           <div className="col-span-3 bg-card border border-border rounded-lg p-6">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">
-                Application Trends
+                Application Flow
               </h2>
               {viewMode === "list" ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    data={chartData}
-                    margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                    <XAxis dataKey="date" stroke="var(--foreground)" />
-                    <YAxis stroke="var(--foreground)" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "var(--card)",
-                        border: `1px solid var(--border)`,
-                        borderRadius: "0.5rem",
-                      }}
-                      labelStyle={{ color: "var(--foreground)" }}
-                    />
-                    <Bar
-                      dataKey="applications"
-                      fill="var(--primary)"
-                      radius={[8, 8, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+                <ApplicationSankey applications={applicationRecords} />
               ) : (
                 <ApplicationFunnel />
               )}
