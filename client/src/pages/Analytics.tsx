@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { Button } from "@/components/ui/button";
 import { Download, Plus, List, Layers } from "lucide-react";
 import Layout from "@/components/Layout";
 import ApplicationBoard from "@/components/ApplicationBoard";
 import ApplicationFunnel from "@/components/ApplicationFunnel";
+import ApplicationSankey from "@/components/ApplicationSankey";
 
 const chartData = [
   { date: "Dec 17", applications: 3 },
