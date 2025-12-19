@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { ChevronRight, ChevronLeft, Upload } from "lucide-react";
+import { parseResume } from "@/lib/resumeParser";
 
 interface FormData {
-  // Step 1: Personal Profile
+  // Step 1: Resume Upload
+  resumeFile: File | null;
+  resumeBase64: string;
+
+  // Step 2: Personal Profile
   firstName: string;
   lastName: string;
   preferredName: string;
@@ -13,13 +18,13 @@ interface FormData {
   postalCode: string;
   country: string;
 
-  // Step 2: Contact Information
+  // Step 3: Contact Information
   email: string;
   phoneCountryCode: string;
   phoneNumber: string;
   phoneDeviceType: string;
 
-  // Step 3: Work Experience
+  // Step 4: Work Experience
   workExperience: Array<{
     jobTitle: string;
     companyName: string;
@@ -30,7 +35,7 @@ interface FormData {
     jobDescription: string;
   }>;
 
-  // Step 4: Education & Languages
+  // Step 5: Education & Languages
   education: Array<{
     school: string;
     degree: string;
@@ -46,12 +51,10 @@ interface FormData {
     fluent: boolean;
   }>;
 
-  // Step 5: Resume & Skills
-  resumeFile: File | null;
-  resumeBase64: string;
+  // Step 6: Skills
   skills: string[];
 
-  // Step 6: Websites & Eligibility
+  // Step 7: Websites & Eligibility
   githubUrl: string;
   linkedinUrl: string;
   portfolioUrl: string;
@@ -71,6 +74,8 @@ interface OnboardingWizardProps {
 const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
+    resumeFile: null,
+    resumeBase64: "",
     firstName: "",
     lastName: "",
     preferredName: "",
@@ -107,8 +112,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       },
     ],
     languages: [{ language: "", proficiency: "Basic", fluent: false }],
-    resumeFile: null,
-    resumeBase64: "",
     skills: [],
     githubUrl: "",
     linkedinUrl: "",
@@ -123,14 +126,17 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   });
 
   const [newSkill, setNewSkill] = useState("");
+  const [isParsingResume, setIsParsingResume] = useState(false);
+  const [parseError, setParseError] = useState("");
 
   const steps = [
-    { title: "PERSONAL PROFILE", number: 1 },
-    { title: "CONTACT INFORMATION", number: 2 },
-    { title: "WORK EXPERIENCE", number: 3 },
-    { title: "EDUCATION & LANGUAGES", number: 4 },
-    { title: "RESUME & SKILLS", number: 5 },
-    { title: "WEBSITES & ELIGIBILITY", number: 6 },
+    { title: "RESUME UPLOAD", number: 1 },
+    { title: "PERSONAL PROFILE", number: 2 },
+    { title: "CONTACT INFORMATION", number: 3 },
+    { title: "WORK EXPERIENCE", number: 4 },
+    { title: "EDUCATION & LANGUAGES", number: 5 },
+    { title: "SKILLS", number: 6 },
+    { title: "WEBSITES & ELIGIBILITY", number: 7 },
   ];
 
   const handleInputChange = (
@@ -147,9 +153,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    setParseError("");
+    setIsParsingResume(true);
+
+    try {
       setFormData(prev => ({
         ...prev,
         resumeFile: file,
@@ -165,6 +176,41 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         }));
       };
       reader.readAsDataURL(file);
+
+      // Parse resume
+      const parsedData = await parseResume(file);
+
+      // Auto-fill form data
+      setFormData(prev => ({
+        ...prev,
+        firstName: parsedData.firstName || prev.firstName,
+        lastName: parsedData.lastName || prev.lastName,
+        email: parsedData.email || prev.email,
+        phoneNumber: parsedData.phoneNumber || prev.phoneNumber,
+        addressLine1: parsedData.address || prev.addressLine1,
+        city: parsedData.city || prev.city,
+        state: parsedData.state || prev.state,
+        postalCode: parsedData.postalCode || prev.postalCode,
+        country: parsedData.country || prev.country,
+        workExperience:
+          parsedData.workExperience.length > 0
+            ? parsedData.workExperience
+            : prev.workExperience,
+        education:
+          parsedData.education.length > 0
+            ? parsedData.education
+            : prev.education,
+        skills: parsedData.skills.length > 0 ? parsedData.skills : prev.skills,
+        githubUrl: parsedData.githubUrl || prev.githubUrl,
+        linkedinUrl: parsedData.linkedinUrl || prev.linkedinUrl,
+        portfolioUrl: parsedData.portfolioUrl || prev.portfolioUrl,
+      }));
+    } catch (error) {
+      setParseError(
+        error instanceof Error ? error.message : "Failed to parse resume"
+      );
+    } finally {
+      setIsParsingResume(false);
     }
   };
 
@@ -201,11 +247,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
   const handleSubmit = () => {
     console.log("Form submitted:", formData);
-    // Save to localStorage or send to background script
     localStorage.setItem("onboardingData", JSON.stringify(formData));
     alert("Profile setup complete! Your data has been saved.");
 
-    // Notify parent component that onboarding is complete
     if (onComplete) {
       onComplete();
     }
@@ -222,7 +266,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               STEP {currentStep + 1} OF {steps.length}
             </div>
             <div
-              className="flex-1 h-1 bg-[#1a1a1a]"
+              className="flex-1 h-1 bg-[#1a1a1a] transition-all"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             ></div>
           </div>
@@ -232,13 +276,65 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           <div className="w-16 h-1 bg-[#0066ff]"></div>
         </div>
 
-        {/* Step 1: Personal Profile */}
+        {/* Step 1: Resume Upload */}
         {currentStep === 0 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Tell us about yourself. Please enter your full name and preferred
-              name (if any), plus your current address. This helps us
-              personalize your experience and prefill personal info on forms.
+              Start by uploading your resume. We'll automatically parse it to extract your
+              contact information, work experience, education, and skills. Then you can
+              review and edit everything on the following steps.
+            </p>
+
+            <div>
+              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
+                UPLOAD RESUME (PDF / WORD / TEXT)
+              </label>
+              <div className="border-3 border-[#1a1a1a] p-6 text-center cursor-pointer hover:bg-[#f0f0f0] transition-colors">
+                <input
+                  type="file"
+                  accept=".pdf,.docx,.doc,.txt"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="resume-upload"
+                  disabled={isParsingResume}
+                />
+                <label
+                  htmlFor="resume-upload"
+                  className="cursor-pointer flex flex-col items-center gap-3"
+                >
+                  <Upload className="w-8 h-8 text-[#1a1a1a]" />
+                  <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
+                    {isParsingResume
+                      ? "PARSING RESUME..."
+                      : formData.resumeFile
+                        ? formData.resumeFile.name
+                        : "CLICK TO UPLOAD RESUME"}
+                  </span>
+                </label>
+              </div>
+              {parseError && (
+                <div className="mt-4 p-4 border-2 border-[#cc0000] bg-[#ffeeee]">
+                  <p className="text-sm font-mono text-[#cc0000]">{parseError}</p>
+                </div>
+              )}
+              {formData.resumeFile && !parseError && (
+                <div className="mt-4 p-4 border-2 border-[#00aa00] bg-[#eeffee]">
+                  <p className="text-sm font-mono text-[#00aa00]">
+                    ✓ Resume parsed successfully! Your information has been extracted
+                    and will autofill the following steps.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Personal Profile */}
+        {currentStep === 1 && (
+          <div className="space-y-6">
+            <p className="text-base text-[#1a1a1a] mb-8">
+              Review and edit your personal information extracted from your resume.
+              Make any corrections or add missing details.
             </p>
 
             <div className="grid grid-cols-2 gap-6">
@@ -370,8 +466,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </div>
         )}
 
-        {/* Step 2: Contact Information */}
-        {currentStep === 1 && (
+        {/* Step 3: Contact Information */}
+        {currentStep === 2 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
               How can people reach you? Share your primary email address and
@@ -441,13 +537,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </div>
         )}
 
-        {/* Step 3: Work Experience */}
-        {currentStep === 2 && (
+        {/* Step 4: Work Experience */}
+        {currentStep === 3 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Work history matters! Add your current and past jobs so we can
-              customize job applications and professional recommendations. You
-              can add multiple roles if needed.
+              Work history matters! Review and update your past jobs. You can
+              add or remove roles as needed.
             </p>
 
             {formData.workExperience.map((job, index) => (
@@ -598,8 +693,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </div>
         )}
 
-        {/* Step 4: Education & Languages */}
-        {currentStep === 3 && (
+        {/* Step 5: Education & Languages */}
+        {currentStep === 4 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
               Let's capture your education and languages. This helps tailor
@@ -810,45 +905,17 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </div>
         )}
 
-        {/* Step 5: Resume & Skills */}
-        {currentStep === 4 && (
+        {/* Step 6: Skills */}
+        {currentStep === 5 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
-              Upload your resume and list your key skills. We'll convert your
-              resume into a secure Base64 string for safe storage and fast
-              autofill. Add the skills you know — technical or soft — to
-              highlight your strengths.
+              Review and manage your skills. Skills extracted from your resume
+              are already listed below. Add or remove any as needed.
             </p>
 
             <div>
               <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
-                UPLOAD RESUME (PDF/DOCX)
-              </label>
-              <div className="border-3 border-[#1a1a1a] p-6 text-center cursor-pointer hover:bg-[#f0f0f0] transition-colors">
-                <input
-                  type="file"
-                  accept=".pdf,.docx"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  id="resume-upload"
-                />
-                <label
-                  htmlFor="resume-upload"
-                  className="cursor-pointer flex flex-col items-center gap-3"
-                >
-                  <Upload className="w-8 h-8 text-[#1a1a1a]" />
-                  <span className="text-sm font-mono font-bold text-[#1a1a1a] tracking-wide">
-                    {formData.resumeFile
-                      ? formData.resumeFile.name
-                      : "CLICK TO UPLOAD RESUME"}
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-mono font-bold text-[#1a1a1a] mb-3 tracking-wide">
-                SKILLS
+                ADD MORE SKILLS
               </label>
               <div className="flex gap-3 mb-4">
                 <input
@@ -891,8 +958,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </div>
         )}
 
-        {/* Step 6: Websites & Eligibility */}
-        {currentStep === 5 && (
+        {/* Step 7: Websites & Eligibility */}
+        {currentStep === 6 && (
           <div className="space-y-6">
             <p className="text-base text-[#1a1a1a] mb-8">
               Almost there! Add your online links — GitHub, LinkedIn, Portfolio
