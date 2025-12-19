@@ -119,6 +119,8 @@ export default function Analytics() {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "board">("list");
+  const [applications, setApplications] = useState(applicationRecords);
+  const [isLoadingFromExtension, setIsLoadingFromExtension] = useState(false);
 
   const filteredRecords = applicationRecords.filter(record => {
     const statusMatch =
