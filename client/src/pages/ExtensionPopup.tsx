@@ -42,14 +42,15 @@ export default function ExtensionPopup() {
       }
     };
 
-    if (typeof chrome !== "undefined" && chrome.runtime) {
-      chrome.runtime.onMessage.addListener(handleMessage);
+    const chromeObj = (window as any).chrome;
+    if (chromeObj?.runtime) {
+      chromeObj.runtime.onMessage.addListener(handleMessage);
     }
 
     // Cleanup
     return () => {
-      if (typeof chrome !== "undefined" && chrome.runtime) {
-        chrome.runtime.onMessage.removeListener(handleMessage);
+      if (chromeObj?.runtime) {
+        chromeObj.runtime.onMessage.removeListener(handleMessage);
       }
     };
   }, []);
