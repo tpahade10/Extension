@@ -109,8 +109,9 @@ export default function ExtensionPopup() {
   const handleDeclineApplication = () => {
     setDetectedJob(null);
 
-    if (typeof chrome !== "undefined" && chrome.runtime) {
-      chrome.runtime.sendMessage({ action: "clearDetectedJob" });
+    const chromeObj = (window as any).chrome;
+    if (chromeObj?.runtime) {
+      chromeObj.runtime.sendMessage({ action: "clearDetectedJob" });
     }
   };
 
