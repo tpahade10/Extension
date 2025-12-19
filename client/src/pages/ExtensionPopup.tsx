@@ -83,10 +83,11 @@ export default function ExtensionPopup() {
       timestamp: new Date().toISOString(),
     };
 
-    if (typeof chrome !== "undefined" && chrome.runtime) {
-      chrome.runtime.sendMessage(
+    const chromeObj = (window as any).chrome;
+    if (chromeObj?.runtime) {
+      chromeObj.runtime.sendMessage(
         { action: "saveApplication", data: application },
-        (response) => {
+        (response: any) => {
           if (response?.success) {
             setTodayApplications((prev) => prev + 1);
             localStorage.setItem(
@@ -96,7 +97,7 @@ export default function ExtensionPopup() {
             setDetectedJob(null);
 
             // Clear detected job from storage
-            chrome.runtime.sendMessage({ action: "clearDetectedJob" });
+            chromeObj.runtime.sendMessage({ action: "clearDetectedJob" });
 
             setIsLoading(false);
           }
