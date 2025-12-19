@@ -118,10 +118,11 @@ export default function ExtensionPopup() {
   const progressPercentage = (todayApplications / goalApplications) * 100;
 
   const openFullApp = (path: string) => {
-    if (typeof chrome !== "undefined" && chrome.tabs) {
+    const chromeObj = (window as any).chrome;
+    if (chromeObj?.tabs) {
       try {
-        chrome.tabs.create({
-          url: `chrome-extension://${chrome.runtime.id}${path}`,
+        chromeObj.tabs.create({
+          url: `chrome-extension://${chromeObj.runtime.id}${path}`,
         });
         window.close();
       } catch (e) {
