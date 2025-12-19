@@ -242,7 +242,7 @@ export default function Analytics() {
                 Application Flow
               </h2>
               {viewMode === "list" ? (
-                <ApplicationSankey applications={applicationRecords} />
+                <ApplicationSankey applications={applications} />
               ) : (
                 <ApplicationFunnel />
               )}
