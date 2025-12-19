@@ -153,12 +153,13 @@ export default function Analytics() {
   // Load applications from Chrome extension storage
   React.useEffect(() => {
     const loadApplicationsFromExtension = async () => {
-      if (typeof chrome !== "undefined" && chrome.runtime) {
+      const chromeObj = (window as any).chrome;
+      if (chromeObj?.runtime) {
         setIsLoadingFromExtension(true);
         try {
-          chrome.runtime.sendMessage(
+          chromeObj.runtime.sendMessage(
             { action: "getApplications" },
-            (response) => {
+            (response: any) => {
               if (response?.applications && response.applications.length > 0) {
                 // Merge extension applications with sample data
                 const mergedApplications = [
