@@ -393,7 +393,7 @@ export default function Analytics() {
           {/* Board View */}
           {viewMode === "board" && (
             <ApplicationBoard
-              applications={applicationRecords}
+              applications={applications}
               searchQuery={searchQuery}
             />
           )}
