@@ -1,58 +1,182 @@
 /**
  * Chrome Extension Background Service Worker
- * Handles extension lifecycle and communication between content scripts and popup
+ * Handles job application detection, storage, and communication
  */
 
-// Initialize extension on install
+// Application storage structure
+const STORAGE_KEYS = {
+  ONBOARDING_DATA: 'onboardingData',
+  APPLICATIONS: 'applications',
+  DETECTED_JOB: 'detectedJob',
+};
+
+/**
+ * Initialize extension on install
+ */
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    // Open onboarding page on first install
     chrome.tabs.create({ url: 'index.html' });
   }
 });
 
-// Listen for messages from content scripts and popup
+/**
+ * Listen for messages from content scripts and popup
+ */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // Profile data requests
   if (request.action === 'getProfileData') {
-    // Retrieve stored profile data
-    chrome.storage.local.get('onboardingData', (result) => {
-      sendResponse({ data: result.onboardingData || null });
+    chrome.storage.local.get(STORAGE_KEYS.ONBOARDING_DATA, (result) => {
+      sendResponse({ data: result[STORAGE_KEYS.ONBOARDING_DATA] || null });
     });
-    return true; // Keep channel open for async response
+    return true;
   }
 
   if (request.action === 'saveProfileData') {
-    // Save profile data to storage
-    chrome.storage.local.set({ onboardingData: request.data }, () => {
+    chrome.storage.local.set({ 
+      [STORAGE_KEYS.ONBOARDING_DATA]: request.data 
+    }, () => {
       sendResponse({ success: true });
     });
     return true;
   }
 
   if (request.action === 'autofillForm') {
-    // Send autofill data to content script
-    chrome.storage.local.get('onboardingData', (result) => {
-      const data = result.onboardingData;
-      if (data) {
-        // Send to content script in active tab
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          if (tabs[0]) {
-            chrome.tabs.sendMessage(tabs[0].id, {
-              action: 'fillForm',
-              data: data
-            });
-          }
+    chrome.storage.local.get(STORAGE_KEYS.ONBOARDING_DATA, (result) => {
+      const data = result[STORAGE_KEYS.ONBOARDING_DATA];
+      if (data && sender.tab?.id) {
+        chrome.tabs.sendMessage(sender.tab.id, {
+          action: 'fillForm',
+          data: data
         });
       }
       sendResponse({ success: true });
     });
     return true;
   }
+
+  // Job application detection
+  if (request.action === 'jobApplicationDetected') {
+    handleJobApplicationDetected(request, sender, sendResponse);
+    return true;
+  }
+
+  if (request.action === 'saveApplication') {
+    saveApplication(request.data, sender, sendResponse);
+    return true;
+  }
+
+  if (request.action === 'getApplications') {
+    getApplications(sendResponse);
+    return true;
+  }
+
+  if (request.action === 'getDetectedJob') {
+    chrome.storage.local.get(STORAGE_KEYS.DETECTED_JOB, (result) => {
+      sendResponse({ 
+        detectedJob: result[STORAGE_KEYS.DETECTED_JOB] || null 
+      });
+    });
+    return true;
+  }
+
+  if (request.action === 'clearDetectedJob') {
+    chrome.storage.local.remove(STORAGE_KEYS.DETECTED_JOB, () => {
+      sendResponse({ success: true });
+    });
+    return true;
+  }
 });
 
-// Listen for tab updates to inject content script
+/**
+ * Handle detected job application
+ */
+function handleJobApplicationDetected(request, sender, sendResponse) {
+  const { detection, jobDetails, formData } = request;
+
+  // Only store if confidence is high enough
+  if (detection.confidence >= 3 || detection.isKnownATS) {
+    const detectedJob = {
+      ...detection,
+      ...jobDetails,
+      tabId: sender.tab?.id,
+      capturedAt: new Date().toISOString(),
+      formData,
+    };
+
+    // Store as detected job
+    chrome.storage.local.set(
+      { [STORAGE_KEYS.DETECTED_JOB]: detectedJob },
+      () => {
+        sendResponse({ acknowledged: true });
+      }
+    );
+
+    // Notify popup if it's open
+    chrome.runtime.sendMessage({
+      action: 'jobDetected',
+      job: detectedJob,
+    }).catch(() => {
+      // Popup not open, that's okay
+    });
+  } else {
+    sendResponse({ acknowledged: false });
+  }
+}
+
+/**
+ * Save application to history
+ */
+function saveApplication(applicationData, sender, sendResponse) {
+  chrome.storage.local.get(STORAGE_KEYS.APPLICATIONS, (result) => {
+    const applications = result[STORAGE_KEYS.APPLICATIONS] || [];
+
+    // Add timestamp and tabId if not present
+    const newApplication = {
+      ...applicationData,
+      id: `app_${Date.now()}`,
+      timestamp: applicationData.timestamp || new Date().toISOString(),
+      tabId: sender.tab?.id,
+      status: 'Applied', // Default status
+    };
+
+    applications.push(newApplication);
+
+    // Keep only last 100 applications
+    if (applications.length > 100) {
+      applications.shift();
+    }
+
+    chrome.storage.local.set(
+      { [STORAGE_KEYS.APPLICATIONS]: applications },
+      () => {
+        sendResponse({ success: true, application: newApplication });
+      }
+    );
+  });
+}
+
+/**
+ * Get all stored applications
+ */
+function getApplications(sendResponse) {
+  chrome.storage.local.get(STORAGE_KEYS.APPLICATIONS, (result) => {
+    const applications = result[STORAGE_KEYS.APPLICATIONS] || [];
+    sendResponse({ applications });
+  });
+}
+
+/**
+ * Listen for tab updates
+ */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
-    // Content script will be injected via manifest
+    // Content script will be auto-injected via manifest
   }
+});
+
+/**
+ * Clean up storage when tab closes
+ */
+chrome.tabs.onRemoved.addListener((tabId) => {
+  // Could clean up tab-specific data here if needed
 });
