@@ -229,7 +229,9 @@ export default function Analytics() {
               <p className="text-sm font-medium text-muted-foreground mb-2">
                 Total Applications
               </p>
-              <p className="text-3xl font-bold text-foreground">286</p>
+              <p className="text-3xl font-bold text-foreground">
+                {applications.length}
+              </p>
             </div>
           </div>
 
