@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { Button } from "@/components/ui/button";
 import { Download, Plus, List, Layers } from "lucide-react";
 import Layout from "@/components/Layout";
 import ApplicationBoard from "@/components/ApplicationBoard";
 import ApplicationFunnel from "@/components/ApplicationFunnel";
+import ApplicationSankey from "@/components/ApplicationSankey";
+
+interface Application {
+  jobTitle: string;
+  company: string;
+  status: "Applied" | "Screen" | "Interviewing" | "Offer" | "Rejected";
+  date: string;
+}
 
 const chartData = [
   { date: "Dec 17", applications: 3 },
@@ -32,7 +31,7 @@ const chartData = [
   { date: "Dec 31", applications: 8 },
 ];
 
-const applicationRecords = [
+const applicationRecords: Application[] = [
   {
     jobTitle: "Software Engineer Intern, KYC (Summer 2025) at Chime",
     company: "https://www.chime.com/",
@@ -120,8 +119,10 @@ export default function Analytics() {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "board">("list");
+  const [applications, setApplications] = useState(applicationRecords);
+  const [isLoadingFromExtension, setIsLoadingFromExtension] = useState(false);
 
-  const filteredRecords = applicationRecords.filter(record => {
+  const filteredRecords = applications.filter(record => {
     const statusMatch =
       selectedStatus === "All" || record.status === selectedStatus;
     const searchMatch =
@@ -132,9 +133,9 @@ export default function Analytics() {
 
   const getStatusCount = (status: string) => {
     if (status === "All") {
-      return applicationRecords.length;
+      return applications.length;
     }
-    return applicationRecords.filter(r => r.status === status).length;
+    return applications.filter(r => r.status === status).length;
   };
 
   const boardStatuses = [
@@ -146,8 +147,56 @@ export default function Analytics() {
   ];
 
   const getRecordsByStatus = (status: string) => {
-    return applicationRecords.filter(record => record.status === status);
+    return applications.filter(record => record.status === status);
   };
+
+  // Load applications from Chrome extension storage
+  React.useEffect(() => {
+    const loadApplicationsFromExtension = async () => {
+      const chromeObj = (window as any).chrome;
+      if (chromeObj?.runtime) {
+        setIsLoadingFromExtension(true);
+        try {
+          chromeObj.runtime.sendMessage(
+            { action: "getApplications" },
+            (response: any) => {
+              if (response?.applications && response.applications.length > 0) {
+                // Merge extension applications with sample data
+                const mergedApplications = [
+                  ...response.applications,
+                  ...applicationRecords,
+                ];
+
+                // Remove duplicates by URL
+                const uniqueApplications = mergedApplications.reduce(
+                  (acc: Application[], current) => {
+                    const isDuplicate = acc.some(
+                      app =>
+                        app.company === current.company &&
+                        app.jobTitle === current.jobTitle
+                    );
+                    if (!isDuplicate) {
+                      acc.push(current);
+                    }
+                    return acc;
+                  },
+                  []
+                );
+
+                setApplications(uniqueApplications);
+              }
+              setIsLoadingFromExtension(false);
+            }
+          );
+        } catch (error) {
+          console.log("Running in non-extension context");
+          setIsLoadingFromExtension(false);
+        }
+      }
+    };
+
+    loadApplicationsFromExtension();
+  }, []);
 
   return (
     <Layout>
@@ -182,7 +231,9 @@ export default function Analytics() {
               <p className="text-sm font-medium text-muted-foreground mb-2">
                 Total Applications
               </p>
-              <p className="text-3xl font-bold text-foreground">286</p>
+              <p className="text-3xl font-bold text-foreground">
+                {applications.length}
+              </p>
             </div>
           </div>
 
@@ -190,32 +241,10 @@ export default function Analytics() {
           <div className="col-span-3 bg-card border border-border rounded-lg p-6">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">
-                Application Trends
+                Application Flow
               </h2>
               {viewMode === "list" ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    data={chartData}
-                    margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                    <XAxis dataKey="date" stroke="var(--foreground)" />
-                    <YAxis stroke="var(--foreground)" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "var(--card)",
-                        border: `1px solid var(--border)`,
-                        borderRadius: "0.5rem",
-                      }}
-                      labelStyle={{ color: "var(--foreground)" }}
-                    />
-                    <Bar
-                      dataKey="applications"
-                      fill="var(--primary)"
-                      radius={[8, 8, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+                <ApplicationSankey applications={applications} />
               ) : (
                 <ApplicationFunnel />
               )}
@@ -366,7 +395,7 @@ export default function Analytics() {
           {/* Board View */}
           {viewMode === "board" && (
             <ApplicationBoard
-              applications={applicationRecords}
+              applications={applications}
               searchQuery={searchQuery}
             />
           )}
