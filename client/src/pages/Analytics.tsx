@@ -122,7 +122,7 @@ export default function Analytics() {
   const [applications, setApplications] = useState(applicationRecords);
   const [isLoadingFromExtension, setIsLoadingFromExtension] = useState(false);
 
-  const filteredRecords = applicationRecords.filter(record => {
+  const filteredRecords = applications.filter(record => {
     const statusMatch =
       selectedStatus === "All" || record.status === selectedStatus;
     const searchMatch =
@@ -133,9 +133,9 @@ export default function Analytics() {
 
   const getStatusCount = (status: string) => {
     if (status === "All") {
-      return applicationRecords.length;
+      return applications.length;
     }
-    return applicationRecords.filter(r => r.status === status).length;
+    return applications.filter(r => r.status === status).length;
   };
 
   const boardStatuses = [
