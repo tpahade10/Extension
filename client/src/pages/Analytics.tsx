@@ -31,7 +31,7 @@ const chartData = [
   { date: "Dec 31", applications: 8 },
 ];
 
-const applicationRecords = [
+const applicationRecords: Application[] = [
   {
     jobTitle: "Software Engineer Intern, KYC (Summer 2025) at Chime",
     company: "https://www.chime.com/",
