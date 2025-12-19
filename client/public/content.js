@@ -6,20 +6,20 @@
 
 // Known ATS platforms for quick detection
 const KNOWN_ATS_PLATFORMS = [
-  'greenhouse.io',
-  'lever.co',
-  'workday.com',
-  'ashby.com',
-  'bamboohr.com',
-  'taleo.net',
-  'icims.com',
-  'jobvite.com',
-  'smartrecruiters.com',
-  'careers.google.com',
-  'careers.apple.com',
-  'careers.microsoft.com',
-  'jobs.netflix.com',
-  'jobs.apple.com',
+  "greenhouse.io",
+  "lever.co",
+  "workday.com",
+  "ashby.com",
+  "bamboohr.com",
+  "taleo.net",
+  "icims.com",
+  "jobvite.com",
+  "smartrecruiters.com",
+  "careers.google.com",
+  "careers.apple.com",
+  "careers.microsoft.com",
+  "jobs.netflix.com",
+  "jobs.apple.com",
 ];
 
 /**
@@ -27,7 +27,7 @@ const KNOWN_ATS_PLATFORMS = [
  */
 function detectJobApplicationPage() {
   const signals = [];
-  
+
   // Signal 1: Check URL for job-related keywords
   const urlLower = window.location.href.toLowerCase();
   const urlSignals = [
@@ -40,7 +40,7 @@ function detectJobApplicationPage() {
   signals.push(...urlSignals);
 
   // Signal 2: Check for known ATS platforms
-  const isKnownATS = KNOWN_ATS_PLATFORMS.some(platform => 
+  const isKnownATS = KNOWN_ATS_PLATFORMS.some(platform =>
     window.location.hostname.includes(platform)
   );
   if (isKnownATS) {
@@ -58,7 +58,7 @@ function detectJobApplicationPage() {
 
   // Signal 4: Look for application-related buttons
   const buttons = document.querySelectorAll('button, input[type="submit"]');
-  const hasApplyButton = Array.from(buttons).some(btn => 
+  const hasApplyButton = Array.from(buttons).some(btn =>
     /apply|submit\s*application|next|continue/i.test(btn.textContent)
   );
   if (hasApplyButton) signals.push(true);
@@ -69,23 +69,26 @@ function detectJobApplicationPage() {
   const hasExperienceField = !!document.querySelector(
     'textarea, input[name*="experience"], textarea[name*="experience"]'
   );
-  
+
   if (hasEmailField) signals.push(true);
   if (hasResumeField) signals.push(true);
   if (hasExperienceField) signals.push(true);
 
   // Signal 6: Check for common form field patterns
-  const inputs = document.querySelectorAll('input[name], textarea[name], select[name]');
+  const inputs = document.querySelectorAll(
+    "input[name], textarea[name], select[name]"
+  );
   const fieldPatterns = Array.from(inputs)
-    .map(input => input.name?.toLowerCase() || '')
-    .join(' ');
-  
-  const hasJobFields = [
-    /first.?name|last.?name/.test(fieldPatterns),
-    /email|phone/.test(fieldPatterns),
-    /experience|skills/.test(fieldPatterns),
-  ].filter(Boolean).length >= 2;
-  
+    .map(input => input.name?.toLowerCase() || "")
+    .join(" ");
+
+  const hasJobFields =
+    [
+      /first.?name|last.?name/.test(fieldPatterns),
+      /email|phone/.test(fieldPatterns),
+      /experience|skills/.test(fieldPatterns),
+    ].filter(Boolean).length >= 2;
+
   if (hasJobFields) signals.push(true);
 
   // Calculate confidence
@@ -107,41 +110,43 @@ function detectJobApplicationPage() {
  */
 function captureApplicationFormData() {
   const formData = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
     skills: [],
     workExperience: [],
     education: [],
     timestamp: new Date().toISOString(),
   };
 
-  const inputs = document.querySelectorAll('input[name], textarea[name], select[name]');
-  
+  const inputs = document.querySelectorAll(
+    "input[name], textarea[name], select[name]"
+  );
+
   inputs.forEach(input => {
-    const name = input.name?.toLowerCase() || '';
-    const value = input.value?.trim() || '';
-    const placeholder = input.placeholder?.toLowerCase() || '';
+    const name = input.name?.toLowerCase() || "";
+    const value = input.value?.trim() || "";
+    const placeholder = input.placeholder?.toLowerCase() || "";
     const fieldIdentifier = `${name} ${placeholder}`;
 
     // Capture text inputs
-    if (input.type === 'email' || fieldIdentifier.includes('email')) {
+    if (input.type === "email" || fieldIdentifier.includes("email")) {
       formData.email = value;
     } else if (
-      name.includes('first') && 
-      (name.includes('name') || placeholder.includes('first'))
+      name.includes("first") &&
+      (name.includes("name") || placeholder.includes("first"))
     ) {
       formData.firstName = value;
     } else if (
-      name.includes('last') && 
-      (name.includes('name') || placeholder.includes('last'))
+      name.includes("last") &&
+      (name.includes("name") || placeholder.includes("last"))
     ) {
       formData.lastName = value;
     } else if (
-      input.type === 'tel' || 
-      fieldIdentifier.includes('phone') || 
-      fieldIdentifier.includes('mobile')
+      input.type === "tel" ||
+      fieldIdentifier.includes("phone") ||
+      fieldIdentifier.includes("mobile")
     ) {
       formData.phoneNumber = value;
     }
@@ -155,14 +160,14 @@ function captureApplicationFormData() {
  */
 function extractJobDetails() {
   // Try to extract job title
-  let jobTitle = '';
+  let jobTitle = "";
   const jobTitleSelectors = [
-    'h1', 
+    "h1",
     '[data-testid="job-title"]',
-    '.job-title',
-    '.position-title',
+    ".job-title",
+    ".position-title",
   ];
-  
+
   for (let selector of jobTitleSelectors) {
     const element = document.querySelector(selector);
     if (element?.textContent) {
@@ -172,13 +177,13 @@ function extractJobDetails() {
   }
 
   // Try to extract company name
-  let companyName = '';
+  let companyName = "";
   const companySelectors = [
     '[data-testid="company"]',
-    '.company-name',
-    '.organization-name',
+    ".company-name",
+    ".organization-name",
   ];
-  
+
   for (let selector of companySelectors) {
     const element = document.querySelector(selector);
     if (element?.textContent) {
@@ -188,10 +193,10 @@ function extractJobDetails() {
   }
 
   return {
-    jobTitle: jobTitle || 'Job Application',
+    jobTitle: jobTitle || "Job Application",
     companyName: companyName || extractDomainName(window.location.hostname),
     url: window.location.href,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
   };
 }
 
@@ -199,7 +204,7 @@ function extractJobDetails() {
  * Extract company name from domain
  */
 function extractDomainName(hostname) {
-  const parts = hostname.split('.');
+  const parts = hostname.split(".");
   if (parts.length >= 2) {
     return parts[parts.length - 2];
   }
@@ -211,21 +216,24 @@ function extractDomainName(hostname) {
  */
 function reportJobDetection() {
   const detection = detectJobApplicationPage();
-  
+
   if (detection.isJobPage) {
     const jobDetails = extractJobDetails();
     const formData = captureApplicationFormData();
 
-    chrome.runtime.sendMessage({
-      action: 'jobApplicationDetected',
-      detection,
-      jobDetails,
-      formData,
-    }, (response) => {
-      if (response?.acknowledged) {
-        console.log('Job application detected and reported');
+    chrome.runtime.sendMessage(
+      {
+        action: "jobApplicationDetected",
+        detection,
+        jobDetails,
+        formData,
+      },
+      response => {
+        if (response?.acknowledged) {
+          console.log("Job application detected and reported");
+        }
       }
-    });
+    );
   }
 }
 
@@ -233,13 +241,13 @@ function reportJobDetection() {
  * Listen for messages from background script
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'fillForm') {
+  if (request.action === "fillForm") {
     autofillForm(request.data);
     sendResponse({ success: true });
-  } else if (request.action === 'detectJobPage') {
+  } else if (request.action === "detectJobPage") {
     const detection = detectJobApplicationPage();
     sendResponse(detection);
-  } else if (request.action === 'captureFormData') {
+  } else if (request.action === "captureFormData") {
     const formData = captureApplicationFormData();
     const jobDetails = extractJobDetails();
     sendResponse({ formData, jobDetails });
@@ -250,61 +258,67 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
  * Autofill form fields with profile data
  */
 function autofillForm(profileData) {
-  const inputs = document.querySelectorAll('input, textarea, select');
+  const inputs = document.querySelectorAll("input, textarea, select");
   let filledCount = 0;
 
-  inputs.forEach((input) => {
-    const name = input.name?.toLowerCase() || '';
-    const id = input.id?.toLowerCase() || '';
-    const placeholder = input.placeholder?.toLowerCase() || '';
-    const label = getAssociatedLabel(input)?.toLowerCase() || '';
+  inputs.forEach(input => {
+    const name = input.name?.toLowerCase() || "";
+    const id = input.id?.toLowerCase() || "";
+    const placeholder = input.placeholder?.toLowerCase() || "";
+    const label = getAssociatedLabel(input)?.toLowerCase() || "";
     const fieldIdentifier = `${name} ${id} ${placeholder} ${label}`;
 
     // Map profile fields to form fields
-    if (matchesField(fieldIdentifier, ['first', 'name', 'fname'])) {
+    if (matchesField(fieldIdentifier, ["first", "name", "fname"])) {
       setInputValue(input, profileData.firstName);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['last', 'surname', 'lname'])) {
+    } else if (matchesField(fieldIdentifier, ["last", "surname", "lname"])) {
       setInputValue(input, profileData.lastName);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['email', 'mail'])) {
+    } else if (matchesField(fieldIdentifier, ["email", "mail"])) {
       setInputValue(input, profileData.email);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['phone', 'tel', 'mobile'])) {
+    } else if (matchesField(fieldIdentifier, ["phone", "tel", "mobile"])) {
       setInputValue(input, profileData.phoneNumber);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['address', 'street', 'address1', 'addr'])) {
+    } else if (
+      matchesField(fieldIdentifier, ["address", "street", "address1", "addr"])
+    ) {
       setInputValue(input, profileData.addressLine1);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['address2', 'apt', 'suite'])) {
+    } else if (matchesField(fieldIdentifier, ["address2", "apt", "suite"])) {
       setInputValue(input, profileData.addressLine2);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['city', 'town'])) {
+    } else if (matchesField(fieldIdentifier, ["city", "town"])) {
       setInputValue(input, profileData.city);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['state', 'province', 'region'])) {
+    } else if (matchesField(fieldIdentifier, ["state", "province", "region"])) {
       setInputValue(input, profileData.state);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['zip', 'postal', 'postcode'])) {
+    } else if (matchesField(fieldIdentifier, ["zip", "postal", "postcode"])) {
       setInputValue(input, profileData.postalCode);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['country', 'nation'])) {
+    } else if (matchesField(fieldIdentifier, ["country", "nation"])) {
       setInputValue(input, profileData.country);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['github'])) {
+    } else if (matchesField(fieldIdentifier, ["github"])) {
       setInputValue(input, profileData.githubUrl);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['linkedin'])) {
+    } else if (matchesField(fieldIdentifier, ["linkedin"])) {
       setInputValue(input, profileData.linkedinUrl);
       filledCount++;
-    } else if (matchesField(fieldIdentifier, ['portfolio', 'website', 'personal'])) {
+    } else if (
+      matchesField(fieldIdentifier, ["portfolio", "website", "personal"])
+    ) {
       setInputValue(input, profileData.portfolioUrl);
       filledCount++;
     }
   });
 
   if (filledCount > 0) {
-    showNotification(`✓ Autofilled ${filledCount} field${filledCount > 1 ? 's' : ''}`);
+    showNotification(
+      `✓ Autofilled ${filledCount} field${filledCount > 1 ? "s" : ""}`
+    );
   }
 }
 
@@ -314,11 +328,13 @@ function autofillForm(profileData) {
 function setInputValue(input, value) {
   if (!value) return;
 
-  if (input.tagName === 'SELECT') {
-    const options = input.querySelectorAll('option');
+  if (input.tagName === "SELECT") {
+    const options = input.querySelectorAll("option");
     for (let option of options) {
-      if (option.textContent.toLowerCase().includes(value.toLowerCase()) ||
-          option.value.toLowerCase().includes(value.toLowerCase())) {
+      if (
+        option.textContent.toLowerCase().includes(value.toLowerCase()) ||
+        option.value.toLowerCase().includes(value.toLowerCase())
+      ) {
         input.value = option.value;
         break;
       }
@@ -327,9 +343,9 @@ function setInputValue(input, value) {
     input.value = value;
   }
 
-  input.dispatchEvent(new Event('input', { bubbles: true }));
-  input.dispatchEvent(new Event('change', { bubbles: true }));
-  input.dispatchEvent(new Event('blur', { bubbles: true }));
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+  input.dispatchEvent(new Event("blur", { bubbles: true }));
 }
 
 /**
@@ -343,13 +359,13 @@ function getAssociatedLabel(input) {
 
   let parent = input.parentElement;
   while (parent) {
-    if (parent.tagName === 'LABEL') {
+    if (parent.tagName === "LABEL") {
       return parent.textContent;
     }
     parent = parent.parentElement;
   }
 
-  return '';
+  return "";
 }
 
 /**
@@ -363,7 +379,7 @@ function matchesField(fieldIdentifier, keywords) {
  * Show notification to user
  */
 function showNotification(message) {
-  const notification = document.createElement('div');
+  const notification = document.createElement("div");
   notification.style.cssText = `
     position: fixed;
     top: 20px;
@@ -390,8 +406,8 @@ function showNotification(message) {
  */
 function initialize() {
   // Report job detection after page fully loads
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', reportJobDetection);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", reportJobDetection);
   } else {
     reportJobDetection();
   }

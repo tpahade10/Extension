@@ -89,7 +89,7 @@ export default function ExtensionPopup() {
         { action: "saveApplication", data: application },
         (response: any) => {
           if (response?.success) {
-            setTodayApplications((prev) => prev + 1);
+            setTodayApplications(prev => prev + 1);
             localStorage.setItem(
               "todayApplications",
               String(todayApplications + 1)

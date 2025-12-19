@@ -171,8 +171,9 @@ export default function Analytics() {
                 const uniqueApplications = mergedApplications.reduce(
                   (acc: Application[], current) => {
                     const isDuplicate = acc.some(
-                      (app) => app.company === current.company &&
-                               app.jobTitle === current.jobTitle
+                      app =>
+                        app.company === current.company &&
+                        app.jobTitle === current.jobTitle
                     );
                     if (!isDuplicate) {
                       acc.push(current);
