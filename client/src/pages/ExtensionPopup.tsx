@@ -1,37 +1,129 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { BarChart3, User, Settings, Zap } from "lucide-react";
+import {
+  BarChart3,
+  User,
+  Settings,
+  Zap,
+  Check,
+  X,
+  AlertCircle,
+} from "lucide-react";
+
+interface DetectedJob {
+  jobTitle: string;
+  companyName: string;
+  url: string;
+  confidence: number;
+  isKnownATS: boolean;
+}
 
 export default function ExtensionPopup() {
   const [, setLocation] = useLocation();
   const [autofillEnabled, setAutofillEnabled] = useState(true);
   const [todayApplications, setTodayApplications] = useState(1);
   const [goalApplications] = useState(10);
+  const [detectedJob, setDetectedJob] = useState<DetectedJob | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Load data from localStorage
+    // Load profile data
     const profileData = localStorage.getItem("profileData");
     const todayApps = localStorage.getItem("todayApplications") || "1";
     setTodayApplications(parseInt(todayApps));
+
+    // Check for detected job
+    checkForDetectedJob();
+
+    // Listen for job detection messages
+    const handleMessage = (message: any) => {
+      if (message.action === "jobDetected") {
+        setDetectedJob(message.job);
+      }
+    };
+
+    if (typeof chrome !== "undefined" && chrome.runtime) {
+      chrome.runtime.onMessage.addListener(handleMessage);
+    }
+
+    // Cleanup
+    return () => {
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        chrome.runtime.onMessage.removeListener(handleMessage);
+      }
+    };
   }, []);
+
+  const checkForDetectedJob = () => {
+    if (typeof chrome !== "undefined" && chrome.runtime) {
+      chrome.runtime.sendMessage(
+        { action: "getDetectedJob" },
+        (response) => {
+          if (response?.detectedJob) {
+            setDetectedJob(response.detectedJob);
+          }
+        }
+      );
+    }
+  };
+
+  const handleConfirmApplication = () => {
+    if (!detectedJob) return;
+
+    setIsLoading(true);
+
+    const application = {
+      jobTitle: detectedJob.jobTitle,
+      company: detectedJob.companyName,
+      status: "Applied",
+      date: new Date().toLocaleDateString(),
+      url: detectedJob.url,
+      timestamp: new Date().toISOString(),
+    };
+
+    if (typeof chrome !== "undefined" && chrome.runtime) {
+      chrome.runtime.sendMessage(
+        { action: "saveApplication", data: application },
+        (response) => {
+          if (response?.success) {
+            setTodayApplications((prev) => prev + 1);
+            localStorage.setItem(
+              "todayApplications",
+              String(todayApplications + 1)
+            );
+            setDetectedJob(null);
+
+            // Clear detected job from storage
+            chrome.runtime.sendMessage({ action: "clearDetectedJob" });
+
+            setIsLoading(false);
+          }
+        }
+      );
+    }
+  };
+
+  const handleDeclineApplication = () => {
+    setDetectedJob(null);
+
+    if (typeof chrome !== "undefined" && chrome.runtime) {
+      chrome.runtime.sendMessage({ action: "clearDetectedJob" });
+    }
+  };
 
   const progressPercentage = (todayApplications / goalApplications) * 100;
 
   const openFullApp = (path: string) => {
-    // Opens the full app in a new tab/window or navigates
     if (typeof chrome !== "undefined" && chrome.tabs) {
-      chrome.runtime.getManifest(); // Check if we're in extension context
       try {
         chrome.tabs.create({
           url: `chrome-extension://${chrome.runtime.id}${path}`,
         });
         window.close();
       } catch (e) {
-        // Fallback: navigate in current window
         setLocation(path);
       }
     } else {
-      // Not in extension context, just navigate
       setLocation(path);
     }
   };
@@ -55,6 +147,65 @@ export default function ExtensionPopup() {
 
       {/* Main Content */}
       <div className="p-6 space-y-6">
+        {/* Detected Job Alert */}
+        {detectedJob && (
+          <div className="bg-emerald-900/30 border border-emerald-700 rounded-lg p-4 space-y-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-emerald-200">
+                  Job Application Detected! 🎯
+                </p>
+                <p className="text-xs text-slate-300 mt-1">
+                  Confidence:{" "}
+                  <span className="text-emerald-400">
+                    {detectedJob.confidence >= 5 ? "Very High" : "High"}
+                  </span>
+                  {detectedJob.isKnownATS && (
+                    <span className="ml-2 text-emerald-400">
+                      (Known ATS Platform)
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-slate-800/50 rounded p-3 space-y-2">
+              <div>
+                <p className="text-xs text-slate-400">Job Title</p>
+                <p className="text-sm font-semibold text-white truncate">
+                  {detectedJob.jobTitle}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Company</p>
+                <p className="text-sm font-semibold text-white">
+                  {detectedJob.companyName}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleConfirmApplication}
+                disabled={isLoading}
+                className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 rounded transition-colors"
+              >
+                <Check className="w-4 h-4" />
+                {isLoading ? "Saving..." : "Confirm"}
+              </button>
+              <button
+                onClick={handleDeclineApplication}
+                disabled={isLoading}
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 rounded transition-colors"
+              >
+                <X className="w-4 h-4" />
+                Decline
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Circular Progress */}
         <div className="flex justify-center">
           <div className="relative w-48 h-48">
@@ -92,7 +243,7 @@ export default function ExtensionPopup() {
                 {todayApplications}
               </div>
               <div className="text-sm text-slate-300 mt-2">
-                Application Today
+                Applications Today
               </div>
               <div className="text-xs text-slate-400 mt-3">
                 Goal: {goalApplications}
