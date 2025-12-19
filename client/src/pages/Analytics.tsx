@@ -147,8 +147,54 @@ export default function Analytics() {
   ];
 
   const getRecordsByStatus = (status: string) => {
-    return applicationRecords.filter(record => record.status === status);
+    return applications.filter(record => record.status === status);
   };
+
+  // Load applications from Chrome extension storage
+  React.useEffect(() => {
+    const loadApplicationsFromExtension = async () => {
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        setIsLoadingFromExtension(true);
+        try {
+          chrome.runtime.sendMessage(
+            { action: "getApplications" },
+            (response) => {
+              if (response?.applications && response.applications.length > 0) {
+                // Merge extension applications with sample data
+                const mergedApplications = [
+                  ...response.applications,
+                  ...applicationRecords,
+                ];
+
+                // Remove duplicates by URL
+                const uniqueApplications = mergedApplications.reduce(
+                  (acc: Application[], current) => {
+                    const isDuplicate = acc.some(
+                      (app) => app.company === current.company &&
+                               app.jobTitle === current.jobTitle
+                    );
+                    if (!isDuplicate) {
+                      acc.push(current);
+                    }
+                    return acc;
+                  },
+                  []
+                );
+
+                setApplications(uniqueApplications);
+              }
+              setIsLoadingFromExtension(false);
+            }
+          );
+        } catch (error) {
+          console.log("Running in non-extension context");
+          setIsLoadingFromExtension(false);
+        }
+      }
+    };
+
+    loadApplicationsFromExtension();
+  }, []);
 
   return (
     <Layout>
